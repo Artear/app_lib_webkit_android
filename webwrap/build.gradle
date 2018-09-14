@@ -16,10 +16,10 @@ apply plugin: 'kotlin-android-extensions'
 
 ext {
     bintrayRepo = 'Android'
-    bintrayName = 'webwrap'
+    bintrayName = 'Webwrap'
 
     publishedGroupId = 'com.artear.webwrap'
-    libraryName = 'webwrap'
+    libraryName = 'Webwrap'
     artifact = 'webwrap'
 
     libraryDescription = 'webwrap sample library'
