@@ -1,8 +1,19 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+
+ext {
+
+    //Image Handling
+    thumbnailkitVersion = "0.2.2"
+    //Tracking
+    multiTrackerVersion = "0.0.6"
+    //Tools
+    toolsVersion = "0.0.10"
+    //UI
+    uiViewVersion = "0.0.14"
+}
+
 
 android {
     compileSdkVersion 27
@@ -30,5 +41,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Artear
+    implementation "com.artear.multitracker:multitracker:$project.multiTrackerVersion"
+    implementation "com.artear.thumbnailkit:thumbnailkit:$project.thumbnailkitVersion"
+    implementation "com.artear.tools:tools:$project.toolsVersion"
+    implementation "com.artear.ui:view:$project.uiViewVersion"
     implementation project(':webwrap')
 }

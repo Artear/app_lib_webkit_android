@@ -36,6 +36,14 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 
+    //Image Handling
+    thumbnailkitVersion = "0.2.2"
+    //Tracking
+    multiTrackerVersion = "0.0.6"
+    //Tools
+    toolsVersion = "0.0.10"
+    //UI
+    uiViewVersion = "0.0.14"
 }
 
 
@@ -68,6 +76,12 @@ dependencies {
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //Artear
+    implementation "com.artear.multitracker:multitracker:$project.multiTrackerVersion"
+    implementation "com.artear.thumbnailkit:thumbnailkit:$project.thumbnailkitVersion"
+    implementation "com.artear.tools:tools:$project.toolsVersion"
+    implementation "com.artear.ui:view:$project.uiViewVersion"
 
     testImplementation 'junit:junit:4.12'
 
