@@ -36,6 +36,8 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 
+    //Logger
+    timberVersion = "4.7.0"
     //Image Handling
     thumbnailkitVersion = "0.2.2"
     //Tracking
@@ -82,6 +84,9 @@ dependencies {
     implementation "com.artear.thumbnailkit:thumbnailkit:$project.thumbnailkitVersion"
     implementation "com.artear.tools:tools:$project.toolsVersion"
     implementation "com.artear.ui:view:$project.uiViewVersion"
+
+    //Logger
+    implementation "com.jakewharton.timber:timber:$project.timberVersion"
 
     testImplementation 'junit:junit:4.12'
 

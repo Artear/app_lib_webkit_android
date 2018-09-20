@@ -14,6 +14,12 @@ import android.webkit.WebView
 
 class WebWrapper(private var webView: WebView?) : LifecycleObserver {
 
+    var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
+    private var loadListener: WebLoadListener? = null
+
+    companion object {
+        private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
+    }
 
     init {
         debugConfig()
@@ -39,18 +45,15 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun extraConfig() {
-        webView?.setOnTouchListener(null)
-        webView?.clearFocus()
-        webView?.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
-//                Timber.d("WebArticle - WebChromeClient - onProgressChanged - progress: %d", newProgress)
-//                if (placeHolder.getVisibility() == VISIBLE && newProgress >= progressMinToHide) {
-//                    placeHolder.setVisibility(GONE)
-//                    if (needToCreateAnim() && webView != null) {
-//                        webView.startAnimation(createAlphaAnimation())
-//                    }
-//                }
+        webView?.apply {
+            setOnTouchListener(null)
+            clearFocus()
+            webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView, newProgress: Int) {
+                    super.onProgressChanged(view, newProgress)
+                    log(newProgress) { R.string.progress_load }
+                    if (newProgress >= progressMinToHide) loadListener?.onLoaded()
+                }
             }
         }
     }
