@@ -10,6 +10,7 @@ import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
+import com.artear.webwrap.presentation.WebCompatViewModel
 import com.artear.webwrap.presentation.WebLoadListener
 
 
@@ -59,8 +60,9 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
         }
     }
 
-    fun loadUrl(url: String) {
-
+    fun loadUrl(url: String, webCompatViewModel: WebCompatViewModel) {
+        webCompatViewModel.requestData(url)
+//        webCompatViewModel.data.
     }
 
     fun enabledCookieManager() {
