@@ -36,16 +36,18 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 
-    //Logger
     timberVersion = "4.7.0"
-    //Image Handling
+
+    //Artear
     thumbnailkitVersion = "0.2.2"
-    //Tracking
     multiTrackerVersion = "0.0.6"
-    //Tools
     toolsVersion = "0.0.10"
-    //UI
-    uiViewVersion = "0.0.14"
+    uiViewVersion = "0.1.0"
+    domainVersion = "0.0.1"
+
+    //Rx
+    rxJavaVersion = "2.1.0"
+    rxAndroidVersion = "2.0.1"
 }
 
 
@@ -84,9 +86,14 @@ dependencies {
     implementation "com.artear.thumbnailkit:thumbnailkit:$project.thumbnailkitVersion"
     implementation "com.artear.tools:tools:$project.toolsVersion"
     implementation "com.artear.ui:view:$project.uiViewVersion"
+    implementation "com.artear.domain:domain:$project.domainVersion"
 
     //Logger
     implementation "com.jakewharton.timber:timber:$project.timberVersion"
+
+    //ReactiveX
+    implementation "io.reactivex.rxjava2:rxjava:$project.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
 
     testImplementation 'junit:junit:4.12'
 

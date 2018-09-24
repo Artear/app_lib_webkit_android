@@ -1,4 +1,4 @@
-package com.artear.webwrap
+package com.artear.webwrap.presentation
 
 interface WebLoadListener {
 

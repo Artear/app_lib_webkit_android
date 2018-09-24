@@ -1,7 +1,6 @@
 package com.artear.webwrap
 
 import android.app.Activity
-import android.content.Context
 import android.support.v4.app.Fragment
 import android.view.View
 import timber.log.Timber
@@ -48,18 +47,10 @@ inline fun <T : View> T.logError(vararg params: Any, messageId: () -> Int) {
 }
 
 /**
- * Clean Log - Calls the specified function [messageId] resource using context and delegates to
- * Timber the log.
- */
-inline fun log(context: Context, vararg params: Any, messageId: () -> Int) {
-    Timber.d(context.resources.getString(messageId()), *params)
-}
-
-/**
  * Standard Log - Calls the specified function [message] and delegates to Timber the log.
  */
-inline fun log(vararg params: Any, message: Any) {
-    Timber.d(message.toString(), *params)
+inline fun log(vararg params: Any, message: () -> String) {
+    Timber.d(message(), *params)
 }
 
 /**

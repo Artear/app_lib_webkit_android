@@ -10,12 +10,13 @@ import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
+import com.artear.webwrap.presentation.WebLoadListener
 
 
 class WebWrapper(private var webView: WebView?) : LifecycleObserver {
 
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
-    private var loadListener: WebLoadListener? = null
+    var loadListener: WebLoadListener? = null
 
     companion object {
         private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
