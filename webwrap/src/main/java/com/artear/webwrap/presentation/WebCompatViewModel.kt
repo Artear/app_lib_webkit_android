@@ -15,7 +15,7 @@ class WebCompatViewModel(private val webUseCase: WebUseCase) : ArtearViewModel<B
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             val url = params[0] as String
             executeCompatLoadUrl(url)
-        } else{
+        } else {
             data.value = true
             state.value = State.Success
         }
@@ -27,9 +27,7 @@ class WebCompatViewModel(private val webUseCase: WebUseCase) : ArtearViewModel<B
                 .subscribeWith(SimpleDisposable(
                         onNextDelegate = {
                             data.value = it
-                            //TOOD create a nestError for invalid url
-                            if(it) state.value = State.Success
-//                            else state.value = State.Error()
+                            state.value = State.Success
                         },
                         onErrorDelegate = {
                             state.value = State.Error(it)

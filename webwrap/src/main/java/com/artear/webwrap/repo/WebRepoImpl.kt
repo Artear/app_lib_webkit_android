@@ -29,7 +29,12 @@ class WebRepoImpl : WebRepository {
         con.connectTimeout = timeout
         con.readTimeout = timeout
         con.requestMethod = "GET"
-        return validResponseCode(con.responseCode)
+
+        check(validResponseCode(con.responseCode)) {
+           String.format("Can not load url, the response code = %d not is valid", con.responseCode)
+        }
+
+        return true
     }
 
     private fun validResponseCode(responseCode: Int): Boolean {
