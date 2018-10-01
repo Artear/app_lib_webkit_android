@@ -5,12 +5,12 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.content.pm.ApplicationInfo
+import android.graphics.Color
 import android.os.Build
 import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
-import com.artear.webwrap.presentation.WebCompatViewModel
 import com.artear.webwrap.presentation.WebLoadListener
 
 
@@ -60,9 +60,13 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
         }
     }
 
-    fun loadUrl(url: String, webCompatViewModel: WebCompatViewModel) {
-        webCompatViewModel.requestData(url)
-//        webCompatViewModel.data.
+    fun loadUrl(url: String) {
+        webView?.apply {
+            //TODO set webclient interface
+            //setWebViewClient()
+            setBackgroundColor(Color.TRANSPARENT)
+            loadUrl(url)
+        }
     }
 
     fun enabledCookieManager() {

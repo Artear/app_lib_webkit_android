@@ -19,6 +19,7 @@ class MainActivity : ArtearActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
+        val url = "https://www.tn.com.ar"
 
         webWrapper = WebWrapper(webViewExample)
         webWrapper.loadListener = object: WebLoadListener {
@@ -34,14 +35,14 @@ class MainActivity : ArtearActivity() {
         val viewModel = WebCompatViewModel(webUseCase = WebUseCase(WebRepoImpl()))
 
         viewModel.data.observe(this, Observer {
-            onDataChanged(it)
+            webWrapper.loadUrl(url)
         })
 
         viewModel.state.observe(this, Observer {
             uiStateViewModel.state.value = it
         })
 
-        webWrapper.loadUrl("url", viewModel)
+        viewModel.requestData(url)
     }
 
     private fun onDataChanged(it: Boolean?) {
