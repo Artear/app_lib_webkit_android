@@ -10,14 +10,9 @@ import timber.log.Timber
  * Timber the log.
  */
 
-inline fun <T : Activity> T.logd(messageId: Int, vararg params: () -> Int) {
+inline fun <T : Activity> T.log(messageId: Int, vararg params: () -> Int) {
     Timber.d(resources.getString(messageId), *params)
 }
-
-inline fun <T : Activity> logd(messageId: () -> String) {
-    Timber.d(messageId())
-}
-
 
 /**
  * Clean Log - Calls the specified function [messageId] resource using self context and delegates to
@@ -46,12 +41,6 @@ inline fun <T : View> T.logError(vararg params: Any, messageId: () -> Int) {
     Timber.e(resources.getString(messageId()), *params)
 }
 
-/**
- * Standard Log - Calls the specified function [message] and delegates to Timber the log.
- */
-inline fun log(vararg params: Any, message: () -> String) {
-    Timber.d(message(), *params)
-}
 
 /**
  * Standard Log - Calls the specified function [message] and delegates to Timber the log.

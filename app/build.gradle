@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 
 ext {
 
+    timberVersion = "4.7.0"
+
     //Image Handling
     thumbnailkitVersion = "0.2.2"
     //Tracking
@@ -11,7 +13,7 @@ ext {
     //Tools
     toolsVersion = "0.0.10"
     //UI
-    uiViewVersion = "0.0.14"
+    uiViewVersion = "0.1.0"
 }
 
 
@@ -47,5 +49,9 @@ dependencies {
     implementation "com.artear.thumbnailkit:thumbnailkit:$project.thumbnailkitVersion"
     implementation "com.artear.tools:tools:$project.toolsVersion"
     implementation "com.artear.ui:view:$project.uiViewVersion"
+
+    //Logger
+    implementation "com.jakewharton.timber:timber:$project.timberVersion"
+
     implementation project(':webwrap')
 }
