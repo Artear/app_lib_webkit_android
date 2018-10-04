@@ -17,13 +17,8 @@ class WebNavigationActionManager {
     }
 
     fun processUri(context: Context, uri: Uri): Boolean {
-        var cached = false
-        actions.forEach { action ->
-            if (action.canExecute(uri)) {
-                cached = true
-                action.execute(context, uri)
-            }
+        return actions.any {
+            it.execute(context, uri)
         }
-        return cached
     }
 }

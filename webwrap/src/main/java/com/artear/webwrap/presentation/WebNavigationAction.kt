@@ -6,6 +6,5 @@ import android.net.Uri
 
 interface WebNavigationAction {
 
-    fun execute(context: Context, uri: Uri)
-    fun canExecute(uri: Uri): Boolean
+    fun execute(context: Context, uri: Uri) : Boolean
 }

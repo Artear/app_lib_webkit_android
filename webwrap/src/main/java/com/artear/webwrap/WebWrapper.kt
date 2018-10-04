@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.webkit.*
+import com.artear.webwrap.presentation.WebJsActionManager
 import com.artear.webwrap.presentation.WebLoadListener
 import com.artear.webwrap.presentation.WebNavigationActionManager
 
@@ -19,9 +20,11 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
     var loadListener: WebLoadListener? = null
     var webNavigationActionManager : WebNavigationActionManager? = null
+    var webJsActionManager: WebJsActionManager? = null
 
     companion object {
         private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
+        private const val JAVASCRIPT_INTERFACE_NAME = "Native"
     }
 
     init {
@@ -58,6 +61,9 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
                     if (newProgress >= progressMinToHide) loadListener?.onLoaded()
                 }
             }
+            if(webJsActionManager != null){
+                addJavascriptInterface(webJsActionManager, JAVASCRIPT_INTERFACE_NAME)
+            }
         }
     }
 
@@ -84,6 +90,7 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
                     }
                 }
 
+                @Suppress("OverridingDeprecatedMember")
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                     log(url) { R.string.override_url }
                     return overrideUrlLoading(view, Uri.parse(url))
@@ -102,7 +109,9 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
     }
 
     private fun overrideUrlLoading(view: WebView, uri: Uri): Boolean {
-        webNavigationActionManager?.run { return processUri(view.context, uri) }
+        webNavigationActionManager?.run {
+            return processUri(view.context, uri)
+        }
         return false
     }
 
@@ -132,15 +141,19 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
             onPause()
             pauseTimers()
         }
-
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
         log { "WebWrap - onDestroy - webView = ${webView?.id}" }
+        webNavigationActionManager?.removeAllActions()
+        webNavigationActionManager = null
+        webJsActionManager = null
         webView?.apply {
+            removeJavascriptInterface(JAVASCRIPT_INTERFACE_NAME)
             clearHistory()
             clearCache(true)
+            @Suppress("DEPRECATION")
             freeMemory()
             destroy()
         }

@@ -6,8 +6,8 @@ import com.artear.tools.error.NestError
 import com.artear.ui.base.ArtearActivity
 import com.artear.webwrap.WebWrapper
 import com.artear.webwrap.log
-import com.artear.webwrap.presentation.LogWebNavigationAction
 import com.artear.webwrap.presentation.WebCompatViewModel
+import com.artear.webwrap.presentation.WebJsActionManager
 import com.artear.webwrap.presentation.WebLoadListener
 import com.artear.webwrap.presentation.WebNavigationActionManager
 import com.artear.webwrap.repo.WebRepoImpl
@@ -22,12 +22,12 @@ class MainActivity : ArtearActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        val url = "http://www.ambito.com"
+        val url = "file:///android_asset/index.html"
 
         webWrapper = WebWrapper(webViewExample)
         webWrapper.loadListener = object: WebLoadListener {
             override fun onError() {
-                TODO("not implemented on error yet!! web wrapper") //To change body of created functions use File | Settings | File Templates.
+                TODO("not implemented on error yet!! web wrapper")
             }
 
             override fun onLoaded() {
@@ -35,12 +35,11 @@ class MainActivity : ArtearActivity() {
             }
         }
 
-
         val navigationActionManager = WebNavigationActionManager()
-
-        navigationActionManager.addAction(LogWebNavigationAction())
+        navigationActionManager.addAction(ArticleWebNavigationAction())
 
         webWrapper.webNavigationActionManager = navigationActionManager
+        webWrapper.webJsActionManager = WebJsActionManager(this)
 
         lifecycle.addObserver(webWrapper)
 
@@ -70,5 +69,4 @@ class MainActivity : ArtearActivity() {
          super.onError(error)
         //show error
     }
-
 }
