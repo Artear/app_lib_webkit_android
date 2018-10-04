@@ -6,8 +6,10 @@ import com.artear.tools.error.NestError
 import com.artear.ui.base.ArtearActivity
 import com.artear.webwrap.WebWrapper
 import com.artear.webwrap.log
+import com.artear.webwrap.presentation.LogWebNavigationAction
 import com.artear.webwrap.presentation.WebCompatViewModel
 import com.artear.webwrap.presentation.WebLoadListener
+import com.artear.webwrap.presentation.WebNavigationActionManager
 import com.artear.webwrap.repo.WebRepoImpl
 import com.artear.webwrap.repo.WebUseCase
 import kotlinx.android.synthetic.main.main_activity.*
@@ -31,8 +33,14 @@ class MainActivity : ArtearActivity() {
             override fun onLoaded() {
                 log { "WebLoadListener - OnLoaded!" }
             }
-
         }
+
+
+        val navigationActionManager = WebNavigationActionManager()
+
+        navigationActionManager.addAction(LogWebNavigationAction())
+
+        webWrapper.webNavigationActionManager = navigationActionManager
 
         lifecycle.addObserver(webWrapper)
 
@@ -58,8 +66,9 @@ class MainActivity : ArtearActivity() {
 
     }
 
-    override fun onError(error: NestError) {
-        super.onError(error)
+     override fun onError(error: NestError) {
+         super.onError(error)
         //show error
     }
+
 }

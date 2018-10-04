@@ -144,6 +144,7 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
             freeMemory()
             destroy()
         }
+        loadListener = null
         webView = null
     }
 }

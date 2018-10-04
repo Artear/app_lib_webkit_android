@@ -11,7 +11,7 @@ class WebRepoImpl : WebRepository {
         return try {
             canReachBaseURL(url, timeout)
         } catch (e: Exception) {
-            log(url, e.message!!) { "Fail trying to reach web url = %s. Message = %s" }
+            log { "Fail trying to reach web url = $url. Message = ${e.message!!}" }
             false
         }
     }
@@ -31,7 +31,7 @@ class WebRepoImpl : WebRepository {
         con.requestMethod = "GET"
 
         check(validResponseCode(con.responseCode)) {
-           String.format("Can not load url, the response code = %d not is valid", con.responseCode)
+           "Can not load url, the response code = ${con.responseCode} not is valid"
         }
 
         return true
