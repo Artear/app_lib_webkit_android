@@ -55,4 +55,5 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$project.timberVersion"
 
     implementation project(':webwrap')
+    kapt project(":processor")
 }
