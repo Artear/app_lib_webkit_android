@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'idea'
+
+idea {
+    module {
+        sourceDirs += files('build/generated/source/kapt/main', 'build/generated/source/kaptKotlin/main')
+        generatedSourceDirs += files('build/generated/source/kapt/main', 'build/generated/source/kaptKotlin/main')
+    }
+}
 
 ext {
 
@@ -54,6 +63,10 @@ dependencies {
     //Logger
     implementation "com.jakewharton.timber:timber:$project.timberVersion"
 
+    implementation 'com.github.yanex:takenoko:0.1'
+
+
     implementation project(':webwrap')
-    kapt project(":processor")
+    implementation project(':annotations')
+    kapt project(':processor')
 }

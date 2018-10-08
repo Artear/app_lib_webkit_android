@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.webkit.*
 import com.artear.webwrap.presentation.WebJsActionManager
+import com.artear.webwrap.presentation.WebJsActionManager2
 import com.artear.webwrap.presentation.WebLoadListener
 import com.artear.webwrap.presentation.WebNavigationActionManager
 
@@ -21,16 +22,19 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
     var loadListener: WebLoadListener? = null
     var webNavigationActionManager : WebNavigationActionManager? = null
     var webJsActionManager: WebJsActionManager? = null
+    var webJsActionManager2: WebJsActionManager2? = null
 
     companion object {
         private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
-        private const val JAVASCRIPT_INTERFACE_NAME = "Native"
+        private const val JAVASCRIPT_INTERFACE_NAME = "Native_log"
+        private const val JAVASCRIPT_INTERFACE_NAME_2 = "Native_alert"
     }
 
     init {
         debugConfig()
         settingsConfig()
-        extraConfig()
+        //TODO see this
+//        extraConfig()
     }
 
     private fun debugConfig() {
@@ -50,7 +54,7 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun extraConfig() {
+    fun extraConfig() {
         webView?.apply {
             setOnTouchListener(null)
             clearFocus()
@@ -63,6 +67,7 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
             }
             if(webJsActionManager != null){
                 addJavascriptInterface(webJsActionManager, JAVASCRIPT_INTERFACE_NAME)
+                addJavascriptInterface(webJsActionManager2, JAVASCRIPT_INTERFACE_NAME_2)
             }
         }
     }

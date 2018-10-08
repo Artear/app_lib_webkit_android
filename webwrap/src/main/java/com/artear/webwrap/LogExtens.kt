@@ -10,7 +10,7 @@ import timber.log.Timber
  * Timber the log.
  */
 
-inline fun <T : Activity> T.log(messageId: Int, vararg params: () -> Int) {
+fun <T : Activity> T.log(messageId: Int, vararg params: () -> Int) {
     Timber.d(resources.getString(messageId), *params)
 }
 

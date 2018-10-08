@@ -34,7 +34,7 @@
           });
         } else {
           try {
-            Native[name](this.index, message);
+            window["Native_" + name].execute(this.index, JSON.stringify(message));
           } catch(error) {
             console.log("[",this.index,"]", name, " : ",message);
           }
