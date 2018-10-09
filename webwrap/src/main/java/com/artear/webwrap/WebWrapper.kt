@@ -11,30 +11,26 @@ import android.net.Uri
 import android.os.Build
 import android.webkit.*
 import com.artear.webwrap.presentation.WebJsActionManager
-import com.artear.webwrap.presentation.WebJsActionManager2
 import com.artear.webwrap.presentation.WebLoadListener
 import com.artear.webwrap.presentation.WebNavigationActionManager
+import com.artear.webwrap.presentation.initialize
 
 
 class WebWrapper(private var webView: WebView?) : LifecycleObserver {
 
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
     var loadListener: WebLoadListener? = null
-    var webNavigationActionManager : WebNavigationActionManager? = null
+    var webNavigationActionManager: WebNavigationActionManager? = null
     var webJsActionManager: WebJsActionManager? = null
-    var webJsActionManager2: WebJsActionManager2? = null
 
     companion object {
         private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
-        private const val JAVASCRIPT_INTERFACE_NAME = "Native_log"
-        private const val JAVASCRIPT_INTERFACE_NAME_2 = "Native_alert"
     }
 
     init {
         debugConfig()
         settingsConfig()
-        //TODO see this
-//        extraConfig()
+        extraConfig()
     }
 
     private fun debugConfig() {
@@ -65,16 +61,20 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
                     if (newProgress >= progressMinToHide) loadListener?.onLoaded()
                 }
             }
-            if(webJsActionManager != null){
-                addJavascriptInterface(webJsActionManager, JAVASCRIPT_INTERFACE_NAME)
-                addJavascriptInterface(webJsActionManager2, JAVASCRIPT_INTERFACE_NAME_2)
-            }
+        }
+    }
+
+    fun loadJsInterface(webJsActionManager: WebJsActionManager){
+        webView?.let {
+            webJsActionManager.initialize()
+            webJsActionManager.addJavascriptInterfaces(it)
+            this.webJsActionManager = webJsActionManager
         }
     }
 
     fun loadUrl(urlTarget: String) {
         webView?.apply {
-            webViewClient = object : WebViewClient(){
+            webViewClient = object : WebViewClient() {
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                     super.onReceivedError(view, request, error)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -151,17 +151,18 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
         log { "WebWrap - onDestroy - webView = ${webView?.id}" }
-        webNavigationActionManager?.removeAllActions()
-        webNavigationActionManager = null
-        webJsActionManager = null
         webView?.apply {
-            removeJavascriptInterface(JAVASCRIPT_INTERFACE_NAME)
+            webJsActionManager?.removeJavascriptInterfaces(this)
             clearHistory()
             clearCache(true)
             @Suppress("DEPRECATION")
             freeMemory()
             destroy()
         }
+        webNavigationActionManager?.removeAllActions()
+        webNavigationActionManager = null
+        webJsActionManager?.removeAllCommands()
+        webJsActionManager = null
         loadListener = null
         webView = null
     }

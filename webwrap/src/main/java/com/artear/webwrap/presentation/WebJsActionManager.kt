@@ -1,27 +1,52 @@
 package com.artear.webwrap.presentation
 
 import android.content.Context
-import android.webkit.JavascriptInterface
-import android.widget.Toast
+import android.webkit.WebView
+import com.artear.webwrap.*
 
+//@JsActionManager
+class WebJsActionManager(val context: Context) {
 
-class WebJsActionManager( val context: Context) {
+    companion object {
+        private const val JAVASCRIPT_INTERFACE_NAME = "Native_"
 
-    @JavascriptInterface
-    fun execute(callback: Int, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        com.artear.webwrap.log { "WebJsActionManager - callback = $callback, log = $message" }
+    }
+
+    val commands: MutableList<CommandJS> = arrayListOf()
+
+    fun addJavascriptInterfaces(webView: WebView) {
+        commands.forEach {
+            webView.addJavascriptInterface(it, JAVASCRIPT_INTERFACE_NAME + it.key)
+        }
+    }
+
+    fun removeJavascriptInterfaces(webView: WebView) {
+        commands.forEach {
+            webView.removeJavascriptInterface(JAVASCRIPT_INTERFACE_NAME + it.key)
+        }
+    }
+
+    fun removeAllCommands() {
+        commands.forEach { it.context = null }
+        commands.clear()
     }
 }
 
-class WebJsActionManager2( val context: Context) {
 
-    @JavascriptInterface
-    fun execute(callback: Int, data: String) {
-        Toast.makeText(context, data, Toast.LENGTH_LONG).show()
-        com.artear.webwrap.log { "WebJsActionManager - callback = $callback, log = $data" }
-    }
+//TODO autogenerar
+fun WebJsActionManager.initialize() {
+
+    //cargar esto...
+
+    val eventsJS: MutableList<EventJS<*>> = arrayListOf()
+
+
+    commands.add(LogJs(context, Log()))
+    commands.add(AlertJS(context, Alert()))
+
 }
+
+
 
 
 
