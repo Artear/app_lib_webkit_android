@@ -7,6 +7,7 @@ import com.artear.annotations.TestAnnotation
 import org.json.JSONException
 import org.json.JSONObject
 
+
 @TestAnnotation(key = "log")
 open class Log : EventJS<LogJSData> {
 

@@ -72,7 +72,9 @@
     };
 
     Manager.log = function(text, success, error) {
-      this.Native("log", text, success, error);
+      this.Native("log", {
+        "message": text 
+      }, success, error);
     };
 
     Manager.images = function(items, success, error) {
