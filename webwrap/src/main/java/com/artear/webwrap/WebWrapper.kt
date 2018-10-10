@@ -66,8 +66,7 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
 
     fun loadJsInterface(webJsActionManager: WebJsActionManager){
         webView?.let {
-            webJsActionManager.initialize()
-            webJsActionManager.addJavascriptInterfaces(it)
+            webJsActionManager.initialize(it)
             this.webJsActionManager = webJsActionManager
         }
     }

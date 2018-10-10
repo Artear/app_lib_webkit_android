@@ -41,7 +41,7 @@ class MainActivity : ArtearActivity() {
         webWrapper.webNavigationActionManager = navigationActionManager
 
         //Load Event Js Controller
-        webWrapper.loadJsInterface(WebJsActionManager(this))
+        webWrapper.loadJsInterface(WebJsActionManager())
 
         lifecycle.addObserver(webWrapper)
 
@@ -70,5 +70,10 @@ class MainActivity : ArtearActivity() {
      override fun onError(error: NestError) {
          super.onError(error)
         //show error
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycle.removeObserver(webWrapper)
     }
 }
