@@ -1,23 +1,23 @@
-package com.artear.webwrap
+package com.artear.webwrap.presentation.webjs
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.app.AlertDialog
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.artear.annotations.TestAnnotation
-import com.artear.webwrap.presentation.JSCallbackType
-import com.artear.webwrap.presentation.JSExecutable
-import com.artear.webwrap.presentation.SimpleJSDisposable
+import com.artear.webwrap.log
 import io.reactivex.Observable
+import io.reactivex.Observable.just
 import org.json.JSONObject
 
 
 @TestAnnotation(key = "log")
-open class Log : SimpleEventJS<LogJSData> {
+open class Log : SyncEventJS<LogJSData> {
 
     override fun event(context: Context, index: Int, data: LogJSData): Observable<JSExecutable> {
         log { "WebJsActionManager - index = $index, log = ${data.message}" }
-        return Observable.just(JSExecutable(index, JSCallbackType.SUCCESS))
+        return just(JSExecutable(index, JSCallbackType.SUCCESS))
     }
 
 }
@@ -25,8 +25,15 @@ open class Log : SimpleEventJS<LogJSData> {
 @TestAnnotation(key = "alert")
 open class Alert : DeferEventJS<AlertJSData> {
 
-    override fun event(context: Context, disposable: SimpleJSDisposable, index: Int, data: AlertJSData) {
-        Toast.makeText(context, data.message, Toast.LENGTH_LONG).show()
+    override fun event(context: Context, observer: JsDisposableObserver, index: Int, data: AlertJSData) {
+        val builder = AlertDialog.Builder(context)
+        builder.setCancelable(true)
+        builder.setOnCancelListener {
+            Toast.makeText(context, data.message, Toast.LENGTH_LONG).show()
+            just(JSExecutable(index, JSCallbackType.SUCCESS)).subscribeWith(observer)
+        }
+
+        builder.create().show()
     }
 
 }
@@ -38,12 +45,12 @@ data class AlertJSData(val title: String,
 
 interface EventJS
 
-interface SimpleEventJS<T> : EventJS {
+interface SyncEventJS<T> : EventJS {
     fun event(context: Context, index: Int, data: T): Observable<JSExecutable>
 }
 
 interface DeferEventJS<T> : EventJS {
-    fun event(context: Context, disposable: SimpleJSDisposable, index: Int, data: T)
+    fun event(context: Context, observer: JsDisposableObserver, index: Int, data: T)
 }
 
 
@@ -51,17 +58,17 @@ interface CommandJS {
 
     val key: String
     var context: Context?
-    var subscription: SimpleJSDisposable
+    var observer: JsDisposableObserver
 
     fun execute(index: Int, dataJson: String)
 
-    @SuppressLint("CheckResult")
-    fun error(index: Int, message: String?, disposable: SimpleJSDisposable) {
-        Observable.error<JSExecutable>(JSExecuteException(index, message)).subscribeWith(disposable)
+    fun getNewObserver(onDelegate: (data: JSExecutable) -> Unit) : JsDisposableObserver{
+        observer.dispose()
+        return JsDisposableObserver(onDelegate)
     }
 
     fun clean() {
-        subscription.dispose()
+        observer.dispose()
         context = null
     }
 }
@@ -70,39 +77,44 @@ interface CommandJS {
 //TODO autogenerar
 
 class LogJs(override var context: Context?, private val log: Log,
-            private val disposable: SimpleJSDisposable) : CommandJS {
+            var onDelegate: (data: JSExecutable) -> Unit) : CommandJS {
+
+    override lateinit var observer: JsDisposableObserver
 
     override val key = "log"
-    override lateinit var subscription: SimpleJSDisposable
 
+    @SuppressLint("CheckResult")
     @JavascriptInterface
     override fun execute(index: Int, dataJson: String) {
+        observer = getNewObserver(onDelegate)
         try {
             val jsonData = JSONObject(dataJson)
             val data = LogJSData(jsonData.getString("message"))
-            subscription = log.event(context!!, index, data).subscribeWith(disposable)
+            result(log.event(context!!, index, data)).subscribeWith(observer)
         } catch (ex: Exception) {
-            error(index, ex.message, disposable)
+            error(index, ex.message, observer)
         }
     }
 
 }
 
 class AlertJS(override var context: Context?, private val alert: Alert,
-              private val disposable: SimpleJSDisposable) : CommandJS {
+              var onDelegate: (data: JSExecutable) -> Unit) : CommandJS {
+
+    override lateinit var observer: JsDisposableObserver
 
     override val key = "alert"
-    override lateinit var subscription: SimpleJSDisposable
 
     @SuppressLint("CheckResult")
     @JavascriptInterface
     override fun execute(index: Int, dataJson: String) {
+        observer = getNewObserver(onDelegate)
         try {
             val jsonData = JSONObject(dataJson)
             val data = AlertJSData(jsonData.getString("title"), jsonData.getString("message"))
-            alert.event(context!!, disposable, index, data)
+            alert.event(context!!, observer, index, data)
         } catch (ex: Exception) {
-            error(index, ex.message, disposable)
+            error(index, ex.message, observer)
         }
     }
 

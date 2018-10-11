@@ -10,10 +10,10 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.webkit.*
-import com.artear.webwrap.presentation.WebJsActionManager
+import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.WebLoadListener
 import com.artear.webwrap.presentation.WebNavigationActionManager
-import com.artear.webwrap.presentation.initialize
+import com.artear.webwrap.presentation.webjs.initialize
 
 
 class WebWrapper(private var webView: WebView?) : LifecycleObserver {
@@ -21,7 +21,7 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
     var loadListener: WebLoadListener? = null
     var webNavigationActionManager: WebNavigationActionManager? = null
-    var webJsActionManager: WebJsActionManager? = null
+    var webJsEventManager: WebJsEventManager? = null
 
     companion object {
         private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
@@ -64,10 +64,10 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
         }
     }
 
-    fun loadJsInterface(webJsActionManager: WebJsActionManager){
+    fun loadJsInterface(webJsEventManager: WebJsEventManager){
         webView?.let {
-            webJsActionManager.initialize(it)
-            this.webJsActionManager = webJsActionManager
+            webJsEventManager.initialize(it)
+            this.webJsEventManager = webJsEventManager
         }
     }
 
@@ -151,7 +151,7 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
     fun onDestroy() {
         log { "WebWrap - onDestroy - webView = ${webView?.id}" }
         webView?.apply {
-            webJsActionManager?.removeJavascriptInterfaces(this)
+            webJsEventManager?.removeJavascriptInterfaces(this)
             clearHistory()
             clearCache(true)
             @Suppress("DEPRECATION")
@@ -160,8 +160,8 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
         }
         webNavigationActionManager?.removeAllActions()
         webNavigationActionManager = null
-        webJsActionManager?.removeAllCommands()
-        webJsActionManager = null
+        webJsEventManager?.removeAllCommands()
+        webJsEventManager = null
         loadListener = null
         webView = null
     }

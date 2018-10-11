@@ -1,4 +1,4 @@
-package com.artear.webwrap.presentation
+package com.artear.webwrap.presentation.webjs
 
 data class JSExecutable(val index: Int, val type: JSCallbackType, val data: String? = "true")
 

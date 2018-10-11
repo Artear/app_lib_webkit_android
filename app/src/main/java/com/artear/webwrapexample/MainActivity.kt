@@ -7,7 +7,7 @@ import com.artear.ui.base.ArtearActivity
 import com.artear.webwrap.WebWrapper
 import com.artear.webwrap.log
 import com.artear.webwrap.presentation.WebCompatViewModel
-import com.artear.webwrap.presentation.WebJsActionManager
+import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.WebLoadListener
 import com.artear.webwrap.presentation.WebNavigationActionManager
 import com.artear.webwrap.repo.WebRepoImpl
@@ -41,7 +41,7 @@ class MainActivity : ArtearActivity() {
         webWrapper.webNavigationActionManager = navigationActionManager
 
         //Load Event Js Controller
-        webWrapper.loadJsInterface(WebJsActionManager())
+        webWrapper.loadJsInterface(WebJsEventManager())
 
         lifecycle.addObserver(webWrapper)
 

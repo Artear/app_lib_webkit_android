@@ -1,12 +1,14 @@
-package com.artear.webwrap.presentation
+package com.artear.webwrap.presentation.webjs
 
 import com.artear.webwrap.JSExecuteException
 import io.reactivex.observers.DisposableObserver
 
 
-class SimpleJSDisposable(var onDelegate: (data: JSExecutable) -> Unit) : DisposableObserver<JSExecutable>() {
+class JsDisposableObserver(var onDelegate: (data: JSExecutable) -> Unit) : DisposableObserver<JSExecutable>() {
 
-    override fun onComplete() {}
+    override fun onComplete() {
+        dispose()
+    }
 
     override fun onNext(data: JSExecutable) {
         onDelegate(data)

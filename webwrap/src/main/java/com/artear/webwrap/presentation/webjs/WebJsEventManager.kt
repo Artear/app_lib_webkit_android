@@ -1,11 +1,10 @@
-package com.artear.webwrap.presentation
+package com.artear.webwrap.presentation.webjs
 
 import android.webkit.ValueCallback
 import android.webkit.WebView
-import com.artear.webwrap.*
 
 //@JsActionManager
-class WebJsActionManager {
+class WebJsEventManager {
 
     companion object {
         private const val JAVASCRIPT_INTERFACE_NAME = "Native_"
@@ -13,7 +12,6 @@ class WebJsActionManager {
 
     val commands: MutableList<CommandJS> = arrayListOf()
     var webView: WebView? = null
-    var disposable = SimpleJSDisposable(onDelegate = { executeJS(it) })
 
     fun addJavascriptInterfaces(webView: WebView) {
         commands.forEach {
@@ -34,7 +32,7 @@ class WebJsActionManager {
 
     fun executeJS(jsExecutable: JSExecutable) {
         evaluateJavaScript("Manager.callback(${jsExecutable.index},".plus(
-                "${jsExecutable.type})', ${jsExecutable.data});"))
+                "\"${jsExecutable.type}\", ${jsExecutable.data});"))
     }
 
     fun refreshIframe() {
@@ -55,14 +53,16 @@ class WebJsActionManager {
 
 
 //TODO autogenerar
-fun WebJsActionManager.initialize(it: WebView) {
+fun WebJsEventManager.initialize(it: WebView) {
     webView = it
 
     //cargar esto...
     val eventsJS: MutableList<EventJS> = arrayListOf()
 
-    commands.add(LogJs(it.context, Log(), disposable))
-    commands.add(AlertJS(it.context, Alert(), disposable))
+    val delegate : (JSExecutable) -> Unit = { executeJS(it) }
+
+    commands.add(LogJs(it.context, Log(), delegate))
+    commands.add(AlertJS(it.context, Alert(), delegate))
 
     addJavascriptInterfaces(it)
 }
