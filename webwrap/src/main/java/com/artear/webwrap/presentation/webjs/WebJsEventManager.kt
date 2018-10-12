@@ -10,7 +10,7 @@ class WebJsEventManager {
         private const val JAVASCRIPT_INTERFACE_NAME = "Native_"
     }
 
-    val commands: MutableList<CommandJS> = arrayListOf()
+    val commands: MutableList<CommandJs> = arrayListOf()
     var webView: WebView? = null
 
     fun addJavascriptInterfaces(webView: WebView) {
@@ -48,24 +48,8 @@ class WebJsEventManager {
         }
     }
 
-
 }
 
-
-//TODO autogenerar
-fun WebJsEventManager.initialize(it: WebView) {
-    webView = it
-
-    //cargar esto...
-    val eventsJS: MutableList<EventJS> = arrayListOf()
-
-    val delegate : (JSExecutable) -> Unit = { executeJS(it) }
-
-    commands.add(LogJs(it.context, Log(), delegate))
-    commands.add(AlertJS(it.context, Alert(), delegate))
-
-    addJavascriptInterfaces(it)
-}
 
 
 
