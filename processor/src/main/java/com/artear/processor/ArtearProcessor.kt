@@ -1,6 +1,6 @@
 package com.artear.processor
 
-import com.artear.annotations.JSInterface
+import com.artear.annotations.JsInterface
 import com.squareup.kotlinpoet.FileSpec
 import java.io.IOException
 import javax.annotation.processing.*
@@ -37,11 +37,11 @@ class ArtearProcessor : AbstractProcessor() {
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(JSInterface::class.java.canonicalName)
+        return setOf(JsInterface::class.java.canonicalName)
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val typeElements = roundEnv.getElementsAnnotatedWith(JSInterface::class.java).asSequence()
+        val typeElements = roundEnv.getElementsAnnotatedWith(JsInterface::class.java).asSequence()
                 .filterIsInstance<TypeElement>()
                 .filter { isValidClass(it) }
                 .map { buildAnnotatedClass(it) }

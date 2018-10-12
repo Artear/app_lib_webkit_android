@@ -1,4 +1,4 @@
-package com.artear.webwrap.presentation
+package com.artear.webwrap.presentation.viewside
 
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation

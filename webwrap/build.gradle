@@ -44,7 +44,7 @@ ext {
     multiTrackerVersion = "0.0.6"
     toolsVersion = "0.0.10"
     uiViewVersion = "0.1.0"
-    domainVersion = "0.0.1"
+    domainVersion = "0.0.2"
 
     //Rx
     rxJavaVersion = "2.1.0"
@@ -54,8 +54,6 @@ ext {
 
 android {
     compileSdkVersion 27
-
-
 
     defaultConfig {
         minSdkVersion 19

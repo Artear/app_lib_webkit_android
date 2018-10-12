@@ -1,6 +1,6 @@
 package com.artear.processor
 
-import com.artear.annotations.TestAnnotation
+import com.artear.annotations.JsInterface
 import org.yanex.takenoko.*
 import java.io.File
 import javax.annotation.processing.*
@@ -13,7 +13,7 @@ import javax.tools.Diagnostic.Kind.ERROR
 
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedAnnotationTypes("com.artear.annotations.TestAnnotation")
+@SupportedAnnotationTypes("com.artear.annotations.JsInterface")
 @SupportedOptions(TestAnnotationProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
 class TestAnnotationProcessor : AbstractProcessor() {
     companion object {
@@ -25,7 +25,7 @@ class TestAnnotationProcessor : AbstractProcessor() {
         processingEnv.messager.printMessage(Diagnostic.Kind.NOTE, "ARRANCO EL PROCESO!!!!")
 
 
-        val annotatedElements = roundEnv.getElementsAnnotatedWith(TestAnnotation::class.java)
+        val annotatedElements = roundEnv.getElementsAnnotatedWith(JsInterface::class.java)
         if (annotatedElements.isEmpty()) return false
 
         val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME] ?: run {

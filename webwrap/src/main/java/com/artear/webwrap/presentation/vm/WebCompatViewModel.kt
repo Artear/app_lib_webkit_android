@@ -1,6 +1,7 @@
-package com.artear.webwrap.presentation
+package com.artear.webwrap.presentation.vm
 
 import android.os.Build
+import com.artear.domain.SimpleDisposable
 import com.artear.ui.model.State
 import com.artear.ui.viewmodel.ArtearViewModel
 import com.artear.webwrap.repo.WebUseCase

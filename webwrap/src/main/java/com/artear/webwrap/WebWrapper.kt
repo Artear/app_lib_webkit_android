@@ -10,12 +10,11 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.webkit.*
+import com.artear.webwrap.presentation.viewside.WebLoadListener
 import com.artear.webwrap.presentation.webjs.WebJsEventManager
-import com.artear.webwrap.presentation.WebLoadListener
-import com.artear.webwrap.presentation.WebNavigationActionManager
-import com.artear.webwrap.presentation.webjs.initialize
+import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 
-
+//TODO check memory webview not null
 class WebWrapper(private var webView: WebView?) : LifecycleObserver {
 
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT

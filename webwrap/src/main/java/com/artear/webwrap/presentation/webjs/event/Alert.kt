@@ -3,14 +3,14 @@ package com.artear.webwrap.presentation.webjs.event
 import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.widget.Toast
-import com.artear.annotations.TestAnnotation
+import com.artear.annotations.JsInterface
 import com.artear.webwrap.presentation.webjs.*
 
 
 data class AlertJSData(val title: String,
                        val message: String)
 
-@TestAnnotation(key = "alert")
+@JsInterface(key = "alert")
 class Alert : DeferEventJs<AlertJSData> {
 
     override fun event(context: Context, delegate: WebJsDispatcher, index: Int, data: AlertJSData) {
