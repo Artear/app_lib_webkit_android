@@ -5,7 +5,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.TypeSpec
 
 
-internal object CodeGenerator {
+internal object ArtearGenerator {
 
     private const val CLASS_NAME_PREFIX = "ArtearJS"
 
