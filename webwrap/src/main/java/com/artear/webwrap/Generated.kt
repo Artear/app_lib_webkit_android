@@ -30,6 +30,7 @@ fun WebJsEventManager.initialize(it: WebView) {
 class LogJs(override var context: Context?, private val log: Log,
             override var delegate: WebJsDispatcher?) : CommandJs {
 
+
     override val key = "log"
 
     @SuppressLint("CheckResult")

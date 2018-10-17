@@ -1,24 +1,39 @@
 package com.artear.processor
 
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.TypeSpec
+import javax.annotation.processing.Messager
+import javax.tools.Diagnostic
 
 
 internal object ArtearGenerator {
 
-    private const val CLASS_NAME_PREFIX = "ArtearJS"
+    private const val CLASS_NAME_JS_SUFFIX = "Js"
 
-    fun generateClass(jsInterfaceClass: JSInterfaceClass): TypeSpec {
+    fun generateClass(messager : Messager, jsInterfaceClass: JSInterfaceClass): TypeSpec {
 
-        val className = jsInterfaceClass.type.toString().split(".").last()
-
-        val builder = TypeSpec.classBuilder(CLASS_NAME_PREFIX + className)
+        val builder = TypeSpec.classBuilder(jsInterfaceClass.className + CLASS_NAME_JS_SUFFIX)
                 .addModifiers(KModifier.PUBLIC, KModifier.FINAL)
 
+        val className = ClassName(jsInterfaceClass.packageName.substringBeforeLast("."), "CommandJs")
+
+        messager.printMessage(Diagnostic.Kind.WARNING, "ArtearGenerator - " +
+                "jsInterfaceClass key = ${jsInterfaceClass.key} ")
+
+        builder.addSuperinterface(className)
+
+
+        val contextClassName = ClassName("android.content", "Context")
+
+        builder.primaryConstructor(FunSpec.constructorBuilder()
+                //TODO var!!!!
+                        .addParameter("context", contextClassName, KModifier.OVERRIDE)
+                        .build())
         jsInterfaceClass.variableNames.forEach {
 
-            builder.addFunction(generateAsJSONMethod(it, jsInterfaceClass))
+//            builder.addFunction(generateAsJSONMethod(it, jsInterfaceClass))
 
         }
 
@@ -30,7 +45,7 @@ internal object ArtearGenerator {
      */
     private fun generateAsJSONMethod(variableName : String, jsInterfaceClass: JSInterfaceClass): FunSpec {
 
-        val paramName = jsInterfaceClass.type.toString().split(".").last().toLowerCase()
+//        val paramName = jsInterfaceClass.type.toString().split(".").last().toLowerCase()
 
         val methodBuilder = FunSpec.builder(variableName)
                 .addModifiers(KModifier.PUBLIC)

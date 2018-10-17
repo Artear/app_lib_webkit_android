@@ -1,25 +1,22 @@
 package com.artear.processor
 
 import com.artear.annotations.JsInterface
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
-import java.io.IOException
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.TypeElement
-import javax.lang.model.element.VariableElement
+import javax.lang.model.element.*
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import javax.tools.Diagnostic.Kind.ERROR
 
-//@SupportedSourceVersion(SourceVersion.RELEASE_8)
-//@SupportedAnnotationTypes("com.artear.annotations.JSInterface")
-//@SupportedOptions(ArtearProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
+
 class ArtearProcessor : AbstractProcessor() {
 
     companion object {
@@ -56,6 +53,7 @@ class ArtearProcessor : AbstractProcessor() {
                     return false
                 }
 
+
         roundEnv.getElementsAnnotatedWith(JsInterface::class.java)
                 .filterIsInstance<TypeElement>()
                 .filter { isValidClass(it) }
@@ -63,50 +61,37 @@ class ArtearProcessor : AbstractProcessor() {
                 .forEach {
                     //Create file and export to a function
 
-                    val greeterClass = ClassName("test.generate.artear", "Greeter")
-                    val file = FileSpec.builder("test.generate.artear", "HelloWorld")
-                            .addType(TypeSpec.classBuilder("Greeter")
-                                    .primaryConstructor(FunSpec.constructorBuilder()
-                                            .addParameter("name", String::class)
-                                            .build())
-                                    .addProperty(PropertySpec.builder("name", String::class)
-                                            .initializer("name")
-                                            .build())
-                                    .addFunction(FunSpec.builder("greet")
-                                            .addStatement("println(%S)", "Hello, \$name")
-                                            .build())
+                    val typeSpec = ArtearGenerator.generateClass(messager, it)
+
+                    val typeSpec2 = TypeSpec.classBuilder("Greeter")
+                            .primaryConstructor(FunSpec.constructorBuilder()
+                                    .addParameter("name", String::class)
                                     .build())
-                            .addFunction(FunSpec.builder("main")
-                                    .addParameter("args", String::class, KModifier.VARARG)
-                                    .addStatement("%T(args[0]).greet()", greeterClass)
+                            .addProperty(PropertySpec.builder("name", String::class)
+                                    .initializer("name")
+                                    .build())
+                            .addFunction(FunSpec.builder("greet")
+                                    .addStatement("println(%S)", "Hello, \$name")
                                     .build())
                             .build()
+
+
+                    val file = FileSpec.builder(it.packageName, typeSpec.name!!)
+                            .addType(typeSpec)
+                            .build()
+
+//                    val greeterClass = ClassName("test.generate.artear", "Greeter")
+//                            .....
+//                            .addFunction(FunSpec.builder("main")
+//                                    .addParameter("args", String::class, KModifier.VARARG)
+//                                    .addStatement("%T(args[0]).greet()", greeterClass)
+//                                    .build())
 
                     file.writeTo(File(kaptKotlinGeneratedDir))
                 }
 
         return true
     }
-
-
-//    override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-//
-//        val typeElements = roundEnv.getElementsAnnotatedWith(JsInterface::class.java).asSequence()
-//                .filterIsInstance<TypeElement>()
-//                .filter { isValidClass(it) }
-//                .map { buildAnnotatedClass(it) }
-//                .toList()
-//
-//        val generatedSourcesRoot: String = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME].orEmpty()
-//        if (generatedSourcesRoot.isEmpty()) {
-//            processingEnv.messager.printMessage(Diagnostic.Kind.ERROR,
-//                    "Can't find the target directory for generated Kotlin files.")
-//            return false
-//        }
-//
-//        generateJSInterfaceClass(typeElements)
-//        return true
-//    }
 
 
     private fun isValidClass(typeElement: TypeElement): Boolean {
@@ -125,25 +110,66 @@ class ArtearProcessor : AbstractProcessor() {
                 .toList()
 
         val packageName = packageName(elements, typeElement)
-//        val generatedClass = ArtearGenerator.generateClass(it)
+        val className = typeElement.asType().toString().split(".").last()
+        val key: String? = findAnnotationValue(typeElement, JsInterface::class.qualifiedName,
+                "key", String::class.java)
 
-        return JSInterfaceClass(typeElement, variableNames)
+        return JSInterfaceClass(packageName, className, key, variableNames)
     }
 
-    @Throws(IOException::class)
-    private fun generateJSInterfaceClass(jsInterfacesClasses: List<JSInterfaceClass>) {
-        if (jsInterfacesClasses.isEmpty()) {
-            return
+    fun findEnclosingTypeElement(e: Element?): TypeElement? {
+        var e = e
+
+        while (e != null && e !is TypeElement) {
+
+            e = e.enclosingElement
+
         }
 
-        for (easyJSONClass in jsInterfacesClasses) {
-            val packageName = Utils.getPackageName(elements, easyJSONClass.typeElement)
-            val generatedClass = ArtearGenerator.generateClass(easyJSONClass)
+        return TypeElement::class.java.cast(e)
 
-            val fileSpec = FileSpec.get(packageName, generatedClass)
-            fileSpec.writeTo(System.out)
-        }
     }
+
+    private fun <T> findAnnotationValue(element: Element, annotationClass: String?,
+                                        valueName: String, expectedType: Class<T>): T? {
+        var ret: T? = null
+        for (annotationMirror in element.annotationMirrors) {
+            val annotationType = annotationMirror.annotationType
+            val annotationElement = annotationType.asElement() as TypeElement
+            if (annotationElement.qualifiedName.contentEquals(annotationClass)) {
+                ret = extractValue(annotationMirror, valueName, expectedType)
+                break
+            }
+        }
+        return ret
+    }
+
+    private fun <T> extractValue(annotationMirror: AnnotationMirror,
+                                 valueName: String, expectedType: Class<T>): T? {
+        val elementValues = HashMap(annotationMirror.elementValues)
+        for ((key, value1) in elementValues) {
+            if (key.simpleName.contentEquals(valueName)) {
+                val value = value1.value
+                return expectedType.cast(value)
+            }
+        }
+        return null
+    }
+
+//    @Throws(IOException::class)
+//    private fun generateJSInterfaceClass(jsInterfacesClasses: List<JSInterfaceClass>) {
+//        if (jsInterfacesClasses.isEmpty()) {
+//            return
+//        }
+//
+//        for (easyJSONClass in jsInterfacesClasses) {
+//            val packageName = Utils.getPackageName(elements, easyJSONClass.typeElement)
+//            val generatedClass = ArtearGenerator.generateClass(easyJSONClass)
+//
+//            val fileSpec = FileSpec.get(packageName, generatedClass)
+//            fileSpec.writeTo(System.out)
+//        }
+//    }
 
     private fun packageName(elementUtils: Elements, typeElement: Element): String {
         val pkg = elementUtils.getPackageOf(typeElement)
