@@ -1,39 +1,78 @@
 package com.artear.processor
 
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import javax.annotation.processing.Messager
-import javax.tools.Diagnostic
 
 
 internal object ArtearGenerator {
 
     private const val CLASS_NAME_JS_SUFFIX = "Js"
 
-    fun generateClass(messager : Messager, jsInterfaceClass: JSInterfaceClass): TypeSpec {
+    fun generateClass(messager: Messager, jsInterfaceClass: JSInterfaceClass): TypeSpec {
 
         val builder = TypeSpec.classBuilder(jsInterfaceClass.className + CLASS_NAME_JS_SUFFIX)
                 .addModifiers(KModifier.PUBLIC, KModifier.FINAL)
 
-        val className = ClassName(jsInterfaceClass.packageName.substringBeforeLast("."), "CommandJs")
+        val upPackageName = jsInterfaceClass.packageName.substringBeforeLast(".")
+        val commandClassName = ClassName(upPackageName, "CommandJs")
 
-        messager.printMessage(Diagnostic.Kind.WARNING, "ArtearGenerator - " +
-                "jsInterfaceClass key = ${jsInterfaceClass.key} ")
+        messager.log("ArtearGenerator - jsInterfaceClass key = ${jsInterfaceClass.key} ")
 
-        builder.addSuperinterface(className)
+        builder.addSuperinterface(commandClassName)
 
+        val contextClassName = ClassName("android.content", "Context").asNullable()
+        val contextParam = ParameterSpec.builder("context", contextClassName,
+                KModifier.OVERRIDE).build()
+        val contextProperty = PropertySpec.builder("context", contextClassName)
+                .initializer("context")
+                .mutable(true)
+                .build()
 
-        val contextClassName = ClassName("android.content", "Context")
+        val targetClassName = ClassName(jsInterfaceClass.packageName, jsInterfaceClass.className)
+        val targetParam = ParameterSpec.builder(targetClassName.simpleName.toLowerCase(),
+                targetClassName, KModifier.PRIVATE)
+                .build()
+        val targetProperty = PropertySpec.builder(targetClassName.simpleName.toLowerCase(), targetClassName)
+                .initializer(targetClassName.simpleName.toLowerCase())
+                .build()
+
+        val delegateClassName = ClassName(upPackageName, "WebJsDispatcher").asNullable()
+        val delegateParam = ParameterSpec.builder("delegate", delegateClassName,
+                KModifier.OVERRIDE)
+                .build()
+        val delegateProperty = PropertySpec.builder("delegate", delegateClassName)
+                .initializer("delegate")
+                .mutable(true)
+                .build()
+
+        val keyProperty = PropertySpec.builder("key", String::class)
+                .addModifiers(KModifier.OVERRIDE)
+                .initializer("%S", jsInterfaceClass.key)
+                .build()
 
         builder.primaryConstructor(FunSpec.constructorBuilder()
-                //TODO var!!!!
-                        .addParameter("context", contextClassName, KModifier.OVERRIDE)
-                        .build())
+                .addParameter(contextParam)
+                .addParameter(targetParam)
+                .addParameter(delegateParam)
+                .build())
+                .addProperty(contextProperty)
+                .addProperty(targetProperty)
+                .addProperty(delegateProperty)
+                .addProperty(keyProperty)
+
+        val indexParam = ParameterSpec.builder("index", Int::class).build()
+        val dataJsonParam = ParameterSpec.builder("dataJson", String::class).build()
+        val executeFunction = FunSpec.builder("execute")
+                .addModifiers(KModifier.OVERRIDE)
+                .addParameter(indexParam)
+                .addParameter(dataJsonParam)
+                .build()
+
+        builder.addFunction(executeFunction)
+
         jsInterfaceClass.variableNames.forEach {
 
-//            builder.addFunction(generateAsJSONMethod(it, jsInterfaceClass))
+            //            builder.addFunction(generateAsJSONMethod(it, jsInterfaceClass))
 
         }
 
@@ -43,7 +82,7 @@ internal object ArtearGenerator {
     /**
      * @return a asJSON() method for an easyJSONClass.
      */
-    private fun generateAsJSONMethod(variableName : String, jsInterfaceClass: JSInterfaceClass): FunSpec {
+    private fun generateAsJSONMethod(variableName: String, jsInterfaceClass: JSInterfaceClass): FunSpec {
 
 //        val paramName = jsInterfaceClass.type.toString().split(".").last().toLowerCase()
 

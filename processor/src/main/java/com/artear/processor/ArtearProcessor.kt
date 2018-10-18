@@ -75,17 +75,9 @@ class ArtearProcessor : AbstractProcessor() {
                                     .build())
                             .build()
 
-
                     val file = FileSpec.builder(it.packageName, typeSpec.name!!)
                             .addType(typeSpec)
                             .build()
-
-//                    val greeterClass = ClassName("test.generate.artear", "Greeter")
-//                            .....
-//                            .addFunction(FunSpec.builder("main")
-//                                    .addParameter("args", String::class, KModifier.VARARG)
-//                                    .addStatement("%T(args[0]).greet()", greeterClass)
-//                                    .build())
 
                     file.writeTo(File(kaptKotlinGeneratedDir))
                 }
@@ -114,7 +106,9 @@ class ArtearProcessor : AbstractProcessor() {
         val key: String? = findAnnotationValue(typeElement, JsInterface::class.qualifiedName,
                 "key", String::class.java)
 
-        return JSInterfaceClass(packageName, className, key, variableNames)
+        val keySafe = checkNotNull(key) { "The key can not be null on JsInterface annotation" }
+
+        return JSInterfaceClass(packageName, className, keySafe, variableNames)
     }
 
     fun findEnclosingTypeElement(e: Element?): TypeElement? {
