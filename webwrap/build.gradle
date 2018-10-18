@@ -101,6 +101,10 @@ dependencies {
 
     implementation project(":annotations")
     kapt project(":processor")
+
+    implementation 'com.squareup.moshi:moshi:1.7.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.7.0'
 }
 
 group = publishedGroupId

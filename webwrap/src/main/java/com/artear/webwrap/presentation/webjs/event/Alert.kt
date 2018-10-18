@@ -5,8 +5,9 @@ import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import com.artear.annotations.JsInterface
 import com.artear.webwrap.presentation.webjs.*
+import com.squareup.moshi.JsonClass
 
-
+@JsonClass(generateAdapter = true)
 data class AlertJSData(val title: String,
                        val message: String)
 

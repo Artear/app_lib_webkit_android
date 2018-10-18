@@ -6,10 +6,10 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.artear.webwrap.presentation.webjs.*
 import com.artear.webwrap.presentation.webjs.event.Alert
-import com.artear.webwrap.presentation.webjs.event.AlertJSData
+import com.artear.webwrap.presentation.webjs.event.AlertJSDataJsonAdapter
 import com.artear.webwrap.presentation.webjs.event.Log
-import com.artear.webwrap.presentation.webjs.event.LogJSData
-import org.json.JSONObject
+import com.artear.webwrap.presentation.webjs.event.LogJSDataJsonAdapter
+import com.squareup.moshi.Moshi
 
 
 //TODO autogenerar
@@ -37,9 +37,9 @@ class LogJs(override var context: Context?, private val log: Log,
     @JavascriptInterface
     override fun execute(index: Int, dataJson: String) {
         try {
-            val jsonData = JSONObject(dataJson)
-            val data = LogJSData(jsonData.getString("message"))
-            val event = log.event(context!!, index, data)
+            val adapter = LogJSDataJsonAdapter(Moshi.Builder().build())
+            val data = adapter.fromJson(dataJson)
+            val event = log.event(context!!, index, data!!)
             delegate!!.dispatch(event)
         } catch (ex: Exception) {
             delegate?.error(index, ex.message)
@@ -57,9 +57,9 @@ class AlertJs(override var context: Context?, private val alert: Alert,
     @JavascriptInterface
     override fun execute(index: Int, dataJson: String) {
         try {
-            val jsonData = JSONObject(dataJson)
-            val data = AlertJSData(jsonData.getString("title"), jsonData.getString("message"))
-            alert.event(context!!, delegate!!, index, data)
+            val adapter = AlertJSDataJsonAdapter(Moshi.Builder().build())
+            val data = adapter.fromJson(dataJson)
+            alert.event(context!!, delegate!!, index, data!!)
         } catch (ex: Exception) {
             delegate?.error(index, ex.message)
         }

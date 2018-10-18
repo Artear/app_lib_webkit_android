@@ -62,13 +62,47 @@ internal object ArtearGenerator {
 
         val indexParam = ParameterSpec.builder("index", Int::class).build()
         val dataJsonParam = ParameterSpec.builder("dataJson", String::class).build()
+
+        val javaScriptClassName = ClassName("android.webkit", "JavascriptInterface")
+        val suppressClassName = ClassName("android.annotation", "SuppressLint")
+        val suppressAnnotation = AnnotationSpec.builder(suppressClassName)
+                .addMember("%S", "CheckResult")
+                .build()
+
+        /*
+        try {
+            val jsonData = JSONObject(dataJson)
+            val data = LogJSData(jsonData.getString("message"))
+            val event = log.event(context!!, index, data)
+            delegate!!.dispatch(event)
+        } catch (ex: Exception) {
+            delegate?.error(index, ex.message)
+        }
+        */
+
+        val executeCode = CodeBlock.builder()
+                .beginControlFlow("try")
+                .addStatement("%S","" )
+                .nextControlFlow("catch (ex: %T)", Exception::class)
+                .endControlFlow()
+                .build()
+
         val executeFunction = FunSpec.builder("execute")
+                .addAnnotation(suppressAnnotation)
+                .addAnnotation(javaScriptClassName)
                 .addModifiers(KModifier.OVERRIDE)
                 .addParameter(indexParam)
                 .addParameter(dataJsonParam)
+                .addCode(executeCode)
                 .build()
 
+
+
+
         builder.addFunction(executeFunction)
+
+
+
 
         jsInterfaceClass.variableNames.forEach {
 
