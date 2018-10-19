@@ -11,7 +11,12 @@ import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.*
+import javax.lang.model.element.AnnotationMirror
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.DeclaredType
+import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import javax.tools.Diagnostic.Kind.ERROR
@@ -96,19 +101,31 @@ class ArtearProcessor : AbstractProcessor() {
 
     private fun buildAnnotatedClass(typeElement: TypeElement): JSInterfaceClass {
 
-        val variableNames = typeElement.enclosedElements
-                .filterIsInstance<VariableElement>()
-                .map { it.simpleName.toString() }
-                .toList()
-
         val packageName = packageName(elements, typeElement)
         val className = typeElement.asType().toString().split(".").last()
-        val key: String? = findAnnotationValue(typeElement, JsInterface::class.qualifiedName,
+        val unsafeKey = findAnnotationValue(typeElement, JsInterface::class.qualifiedName,
                 "key", String::class.java)
+        val key = checkNotNull(unsafeKey) { "The key can not be null on JsInterface annotation" }
 
-        val keySafe = checkNotNull(key) { "The key can not be null on JsInterface annotation" }
+        val interfacePairType = typeElement.interfaces
+                .map { return@map getPairType(it) }
+                .first()
 
-        return JSInterfaceClass(packageName, className, keySafe, variableNames)
+        return JSInterfaceClass(packageName, className, key, interfacePairType)
+    }
+
+    private fun getPairType(it: TypeMirror): Pair<String, String> {
+        val element = typeUtils.asElement(it) as TypeElement
+        var typeInterface: String? = null
+        if (it is DeclaredType) {
+            typeInterface = it.typeArguments.first().toString()
+        }
+        checkNotNull(typeInterface) {
+            "Can not be null the type interface"
+        }
+        messager.log("typeInterface $typeInterface")
+
+        return Pair(element.qualifiedName.toString().substringAfterLast("."), typeInterface!!)
     }
 
     fun findEnclosingTypeElement(e: Element?): TypeElement? {

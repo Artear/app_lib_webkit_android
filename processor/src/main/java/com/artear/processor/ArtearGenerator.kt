@@ -16,8 +16,6 @@ internal object ArtearGenerator {
         val upPackageName = jsInterfaceClass.packageName.substringBeforeLast(".")
         val commandClassName = ClassName(upPackageName, "CommandJs")
 
-        messager.log("ArtearGenerator - jsInterfaceClass key = ${jsInterfaceClass.key} ")
-
         builder.addSuperinterface(commandClassName)
 
         val contextClassName = ClassName("android.content", "Context").asNullable()
@@ -82,7 +80,7 @@ internal object ArtearGenerator {
 
         val executeCode = CodeBlock.builder()
                 .beginControlFlow("try")
-                .addStatement("%S","" )
+                .addStatement("%S", "")
                 .nextControlFlow("catch (ex: %T)", Exception::class)
                 .endControlFlow()
                 .build()
@@ -96,18 +94,13 @@ internal object ArtearGenerator {
                 .addCode(executeCode)
                 .build()
 
-
-
-
         builder.addFunction(executeFunction)
 
-
-
-
-        jsInterfaceClass.variableNames.forEach {
-
-            //            builder.addFunction(generateAsJSONMethod(it, jsInterfaceClass))
-
+        when (jsInterfaceClass.interfaceType.first) {
+            "SyncEventJs" -> {
+            }
+            "DeferEventJs" -> {
+            }
         }
 
         return builder.build()
