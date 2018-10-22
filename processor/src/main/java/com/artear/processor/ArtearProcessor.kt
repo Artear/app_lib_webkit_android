@@ -1,18 +1,15 @@
 package com.artear.processor
 
 import com.artear.annotations.JsInterface
+import com.artear.processor.Utils.findAnnotationValue
+import com.artear.processor.Utils.packageName
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.AnnotationMirror
-import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
@@ -63,31 +60,17 @@ class ArtearProcessor : AbstractProcessor() {
                 .filterIsInstance<TypeElement>()
                 .filter { isValidClass(it) }
                 .map { buildAnnotatedClass(it) }
-                .forEach {
-                    //Create file and export to a function
-
-                    val typeSpec = ArtearGenerator.generateClass(messager, it)
-
-                    val typeSpec2 = TypeSpec.classBuilder("Greeter")
-                            .primaryConstructor(FunSpec.constructorBuilder()
-                                    .addParameter("name", String::class)
-                                    .build())
-                            .addProperty(PropertySpec.builder("name", String::class)
-                                    .initializer("name")
-                                    .build())
-                            .addFunction(FunSpec.builder("greet")
-                                    .addStatement("println(%S)", "Hello, \$name")
-                                    .build())
-                            .build()
-
-                    val file = FileSpec.builder(it.packageName, typeSpec.name!!)
-                            .addType(typeSpec)
-                            .build()
-
-                    file.writeTo(File(kaptKotlinGeneratedDir))
-                }
+                .forEach { createJsInterfaceFile(it, kaptKotlinGeneratedDir) }
 
         return true
+    }
+
+    private fun createJsInterfaceFile(jsInterfaceClass: JSInterfaceClass, pathname: String) {
+        val jsInterfaceTypeSpec = ArtearGenerator.generateJsInterfaceTypeSpec(jsInterfaceClass)
+        val file = FileSpec.builder(jsInterfaceClass.packageName, jsInterfaceTypeSpec.name!!)
+                .addType(jsInterfaceTypeSpec)
+                .build()
+        file.writeTo(File(pathname))
     }
 
 
@@ -106,7 +89,6 @@ class ArtearProcessor : AbstractProcessor() {
         val unsafeKey = findAnnotationValue(typeElement, JsInterface::class.qualifiedName,
                 "key", String::class.java)
         val key = checkNotNull(unsafeKey) { "The key can not be null on JsInterface annotation" }
-
         val interfacePairType = typeElement.interfaces
                 .map { return@map getPairType(it) }
                 .first()
@@ -128,65 +110,5 @@ class ArtearProcessor : AbstractProcessor() {
         return Pair(element.qualifiedName.toString().substringAfterLast("."), typeInterface!!)
     }
 
-    fun findEnclosingTypeElement(e: Element?): TypeElement? {
-        var e = e
 
-        while (e != null && e !is TypeElement) {
-
-            e = e.enclosingElement
-
-        }
-
-        return TypeElement::class.java.cast(e)
-
-    }
-
-    private fun <T> findAnnotationValue(element: Element, annotationClass: String?,
-                                        valueName: String, expectedType: Class<T>): T? {
-        var ret: T? = null
-        for (annotationMirror in element.annotationMirrors) {
-            val annotationType = annotationMirror.annotationType
-            val annotationElement = annotationType.asElement() as TypeElement
-            if (annotationElement.qualifiedName.contentEquals(annotationClass)) {
-                ret = extractValue(annotationMirror, valueName, expectedType)
-                break
-            }
-        }
-        return ret
-    }
-
-    private fun <T> extractValue(annotationMirror: AnnotationMirror,
-                                 valueName: String, expectedType: Class<T>): T? {
-        val elementValues = HashMap(annotationMirror.elementValues)
-        for ((key, value1) in elementValues) {
-            if (key.simpleName.contentEquals(valueName)) {
-                val value = value1.value
-                return expectedType.cast(value)
-            }
-        }
-        return null
-    }
-
-//    @Throws(IOException::class)
-//    private fun generateJSInterfaceClass(jsInterfacesClasses: List<JSInterfaceClass>) {
-//        if (jsInterfacesClasses.isEmpty()) {
-//            return
-//        }
-//
-//        for (easyJSONClass in jsInterfacesClasses) {
-//            val packageName = Utils.getPackageName(elements, easyJSONClass.typeElement)
-//            val generatedClass = ArtearGenerator.generateClass(easyJSONClass)
-//
-//            val fileSpec = FileSpec.get(packageName, generatedClass)
-//            fileSpec.writeTo(System.out)
-//        }
-//    }
-
-    private fun packageName(elementUtils: Elements, typeElement: Element): String {
-        val pkg = elementUtils.getPackageOf(typeElement)
-        if (pkg.isUnnamed) {
-            throw GeneratorClassExceptions("The package of ${typeElement.simpleName} class has no name")
-        }
-        return pkg.qualifiedName.toString()
-    }
 }

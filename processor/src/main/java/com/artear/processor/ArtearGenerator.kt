@@ -1,14 +1,13 @@
 package com.artear.processor
 
 import com.squareup.kotlinpoet.*
-import javax.annotation.processing.Messager
 
 
 internal object ArtearGenerator {
 
     private const val CLASS_NAME_JS_SUFFIX = "Js"
 
-    fun generateClass(messager: Messager, jsInterfaceClass: JSInterfaceClass): TypeSpec {
+    fun generateJsInterfaceTypeSpec(jsInterfaceClass: JSInterfaceClass): TypeSpec {
 
         val builder = TypeSpec.classBuilder(jsInterfaceClass.className + CLASS_NAME_JS_SUFFIX)
                 .addModifiers(KModifier.PUBLIC, KModifier.FINAL)
@@ -71,17 +70,6 @@ internal object ArtearGenerator {
                 .addMember("%S", "CheckResult")
                 .build()
 
-        /*
-        try {
-            val adapter = LogJSDataJsonAdapter(Moshi.Builder().build())
-            val data = adapter.fromJson(dataJson)
-            val event = log.event(context!!, index, data)
-            delegate!!.dispatch(event)
-        } catch (ex: Exception) {
-            delegate?.error(index, ex.message)
-        }
-        */
-
         val nameInterfaceGenericType = jsInterfaceClass.interfaceType.second.substringAfterLast(".")
 
         val classNameJsonAdapter = ClassName("$upPackageName.data", "${nameInterfaceGenericType}JsonAdapter")
@@ -99,14 +87,15 @@ internal object ArtearGenerator {
 
         when (jsInterfaceClass.interfaceType.first) {
             "SyncEventJs" -> {
-                codeBuilder.addStatement("val event = $targetNameParam.event($contextNameParam!!,$indexNameParam, data!!)")
+                codeBuilder.addStatement("val event = $targetNameParam.event(" +
+                        "$contextNameParam!!,$indexNameParam, data!!)")
                 codeBuilder.addStatement("$delegateNameParam!!.%T(event)", classNameDispatch)
             }
             "DeferEventJs" -> {
-                codeBuilder.addStatement("$targetNameParam.event($contextNameParam!!, $delegateNameParam!!, $indexNameParam, data!!)")
+                codeBuilder.addStatement("$targetNameParam.event(" +
+                        "$contextNameParam!!, $delegateNameParam!!, $indexNameParam, data!!)")
             }
         }
-
 
         val executeCode = codeBuilder.nextControlFlow("catch (ex: %T)", Exception::class)
                 .addStatement("$delegateNameParam?.%T($indexNameParam, ex.message)", classNameError)
@@ -124,38 +113,7 @@ internal object ArtearGenerator {
 
         builder.addFunction(executeFunction)
 
-
-
         return builder.build()
     }
 
-    /**
-     * @return a asJSON() method for an easyJSONClass.
-     */
-    private fun generateAsJSONMethod(variableName: String, jsInterfaceClass: JSInterfaceClass): FunSpec {
-
-//        val paramName = jsInterfaceClass.type.toString().split(".").last().toLowerCase()
-
-        val methodBuilder = FunSpec.builder(variableName)
-                .addModifiers(KModifier.PUBLIC)
-                .addParameter("index", Int::class)
-//        if (easyJSONClass.variableNames.isNotEmpty()) {
-//            methodBuilder.addCode("try {\n")
-//        }
-//
-//        for (variableName in easyJSONClass.variableNames) {
-//            methodBuilder.addStatement(String.format("  jsonObject.put(\"%s\", $paramName.%s)",
-//                    variableName, variableName))
-//
-//        }
-//        if (easyJSONClass.variableNames.isNotEmpty()) {
-//            methodBuilder.addCode("} catch (\$T e) {\n" +
-//                    "   e.printStackTrace();\n" +
-//                    "}\n", JSONException)
-//        }
-//
-//        methodBuilder.addStatement("return jsonObject")
-
-        return methodBuilder.build()
-    }
 }
