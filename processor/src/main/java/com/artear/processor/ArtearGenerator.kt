@@ -1,6 +1,6 @@
 package com.artear.processor
 
-import com.artear.processor.process.JsInterfaceClass
+import com.artear.processor.process.model.JsInterfaceClass
 import com.squareup.kotlinpoet.*
 
 

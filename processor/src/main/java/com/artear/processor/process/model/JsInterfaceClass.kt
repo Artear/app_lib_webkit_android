@@ -1,4 +1,4 @@
-package com.artear.processor
+package com.artear.processor.process.model
 
 /**
  * @param packageName The original package name of the class that have [com.artear.annotations.JsInterface]
@@ -8,5 +8,5 @@ package com.artear.processor
  * generic type of that interface type. For example: List<Int> -> first is List, and second
  * is Int
  */
-internal class JSInterfaceClass(val packageName: String, val className: String, val key: String,
+class JsInterfaceClass(val packageName: String, val className: String, val key: String,
                                 val interfaceType: Pair<String, String>)

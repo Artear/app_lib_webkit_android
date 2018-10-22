@@ -1,13 +1,21 @@
 package com.artear.processor.process
 
+import javax.annotation.processing.Messager
+import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 
-interface Process<T> {
+abstract class Process<T>(val processingEnv: ProcessingEnvironment) {
 
-    val annotation: Class<out Annotation>
+    val messager: Messager = processingEnv.messager
+    val elements: Elements = processingEnv.elementUtils
+    val typeUtils: Types = processingEnv.typeUtils
 
-    fun buildAnnotationClass(typeElement: TypeElement): T
+    abstract val annotation: Class<out Annotation>
 
-    fun createAnnotationFile(annotationClass: T, pathname: String)
+    abstract fun buildAnnotationClass(typeElement: TypeElement): T
+
+    abstract fun createAnnotationFile(annotationClass: T)
 }

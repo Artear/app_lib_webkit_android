@@ -11,3 +11,4 @@ fun Messager.log(message : String){
 fun Messager.error(message : String){
     printMessage(Diagnostic.Kind.ERROR, message)
 }
+
