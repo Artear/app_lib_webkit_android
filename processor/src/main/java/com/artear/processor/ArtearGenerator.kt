@@ -1,5 +1,6 @@
 package com.artear.processor
 
+import com.artear.processor.process.model.JsEventManagerClass
 import com.artear.processor.process.model.JsInterfaceClass
 import com.squareup.kotlinpoet.*
 
@@ -113,6 +114,17 @@ internal object ArtearGenerator {
                 .build()
 
         builder.addFunction(executeFunction)
+
+        return builder.build()
+    }
+
+    fun generateJsEventManagerTypeSpec(annotationClass: JsEventManagerClass) : FunSpec{
+
+        val className = ClassName(annotationClass.packageName, annotationClass.className)
+        val builder = FunSpec.builder("initialize")
+                .receiver(className)
+                .addModifiers(KModifier.PUBLIC)
+                .addStatement("")
 
         return builder.build()
     }

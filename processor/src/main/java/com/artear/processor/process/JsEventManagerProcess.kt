@@ -1,8 +1,11 @@
 package com.artear.processor.process
 
 import com.artear.annotations.JsEventManager
+import com.artear.processor.ArtearGenerator
 import com.artear.processor.process.model.JsEventManagerClass
+import com.artear.processor.util.KotlinFiler
 import com.artear.processor.util.Utils
+import com.squareup.kotlinpoet.FileSpec
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.TypeElement
 
@@ -18,6 +21,27 @@ class JsEventManagerProcess(processingEnv: ProcessingEnvironment) : Process<JsEv
     }
 
     override fun createAnnotationFile(annotationClass: JsEventManagerClass) {
-
+        val jsEventManagerFuncSpec = ArtearGenerator.generateJsEventManagerTypeSpec(annotationClass)
+        val file = FileSpec.builder(annotationClass.packageName, "${annotationClass.className}Ext")
+                .addFunction(jsEventManagerFuncSpec)
+                .build()
+        file.writeTo(KotlinFiler.getInstance(processingEnv).newFile())
     }
+
+    /*
+       fun initialize(it: WebView) {
+        webView = it
+
+        //cargar esto...
+        val eventsJS: MutableList<EventJs> = arrayListOf()
+
+        val delegate: WebJsDispatcher = { executeJS(it) }
+
+        commands.add(LogJs(it.context, Log(), delegate))
+        commands.add(AlertJs(it.context, Alert(), delegate))
+
+        addJavascriptInterfaces(it)
+    }
+     */
+
 }
