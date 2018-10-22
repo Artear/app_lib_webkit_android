@@ -1,7 +1,6 @@
 package com.artear.processor.util
 
 import com.artear.processor.Config
-import com.artear.processor.KotlinFilerException
 import java.io.File
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
@@ -21,6 +20,5 @@ class KotlinFiler(processingEnv: ProcessingEnvironment) {
     fun newFile(): File {
         return File(kaptKotlinGeneratedDir)
     }
-
 
 }

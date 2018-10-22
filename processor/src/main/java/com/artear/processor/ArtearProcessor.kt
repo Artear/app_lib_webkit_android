@@ -6,6 +6,7 @@ import com.artear.processor.process.JsEventManagerClass
 import com.artear.processor.process.JsInterfaceClass
 import com.artear.processor.util.KotlinFiler
 import com.artear.processor.util.Utils.findAnnotationValue
+import com.artear.processor.util.Utils.isValidClass
 import com.artear.processor.util.Utils.packageName
 import com.artear.processor.util.log
 import com.squareup.kotlinpoet.FileSpec
@@ -14,13 +15,11 @@ import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import javax.tools.Diagnostic.Kind.ERROR
 
 
 class ArtearProcessor : AbstractProcessor() {
@@ -44,7 +43,8 @@ class ArtearProcessor : AbstractProcessor() {
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(JsInterface::class.java.canonicalName, JsEventManager::class.java.canonicalName)
+        return setOf(JsInterface::class.java.canonicalName,
+                JsEventManager::class.java.canonicalName)
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
@@ -53,58 +53,17 @@ class ArtearProcessor : AbstractProcessor() {
 
         roundEnv.getElementsAnnotatedWith(JsInterface::class.java)
                 .filterIsInstance<TypeElement>()
-                .filter { isValidClass(it) }
+                .filter { isValidClass(it, messager) }
                 .map { buildJsInterfaceClass(it) }
                 .forEach { createJsInterfaceFile(it) }
 
         roundEnv.getElementsAnnotatedWith(JsEventManager::class.java)
                 .filterIsInstance<TypeElement>()
-                .filter { isValidClass(it) }
+                .filter { isValidClass(it, messager) }
                 .map { buildJsEventInterfaceClass(it) }
                 .forEach { createJsEventManagerFileExtension(it) }
 
         return true
-    }
-
-    private fun createJsEventManagerFileExtension(jsEventManagerClass: JsEventManagerClass) {
-
-    }
-
-    private fun buildJsEventInterfaceClass(typeElement: TypeElement): JsEventManagerClass {
-        val packageName = packageName(elements, typeElement)
-        val className = typeElement.asType().toString().split(".").last()
-        return JsEventManagerClass(packageName, className)
-    }
-
-    private fun createJsInterfaceFile(jsInterfaceClass: JsInterfaceClass) {
-        val jsInterfaceTypeSpec = ArtearGenerator.generateJsInterfaceTypeSpec(jsInterfaceClass)
-        val file = FileSpec.builder(jsInterfaceClass.packageName, jsInterfaceTypeSpec.name!!)
-                .addType(jsInterfaceTypeSpec)
-                .build()
-        file.writeTo(KotlinFiler.getInstance(processingEnv).newFile())
-    }
-
-
-    private fun isValidClass(typeElement: TypeElement): Boolean {
-        if (typeElement.kind != ElementKind.CLASS) {
-            messager.printMessage(ERROR, "Can only be applied to classes,  element: $typeElement ")
-            return false
-        }
-        return true
-    }
-
-    private fun buildJsInterfaceClass(typeElement: TypeElement): JsInterfaceClass {
-
-        val packageName = packageName(elements, typeElement)
-        val className = typeElement.asType().toString().split(".").last()
-        val unsafeKey = findAnnotationValue(typeElement, JsInterface::class.qualifiedName,
-                "key", String::class.java)
-        val key = checkNotNull(unsafeKey) { "The key can not be null on JsInterface annotation" }
-        val interfacePairType = typeElement.interfaces
-                .map { return@map getPairType(it) }
-                .first()
-
-        return JsInterfaceClass(packageName, className, key, interfacePairType)
     }
 
     private fun getPairType(it: TypeMirror): Pair<String, String> {
@@ -121,5 +80,38 @@ class ArtearProcessor : AbstractProcessor() {
         return Pair(element.qualifiedName.toString().substringAfterLast("."), typeInterface!!)
     }
 
+    private fun buildJsInterfaceClass(typeElement: TypeElement): JsInterfaceClass {
+
+        val packageName = packageName(elements, typeElement)
+        val className = typeElement.asType().toString().split(".").last()
+        val unsafeKey = findAnnotationValue(typeElement, JsInterface::class.qualifiedName,
+                "key", String::class.java)
+        val key = checkNotNull(unsafeKey) { "The key can not be null on JsInterface annotation" }
+        val interfacePairType = typeElement.interfaces
+                .map { return@map getPairType(it) }
+                .first()
+
+        return JsInterfaceClass(packageName, className, key, interfacePairType)
+    }
+
+
+    private fun createJsInterfaceFile(jsInterfaceClass: JsInterfaceClass) {
+        val jsInterfaceTypeSpec = ArtearGenerator.generateJsInterfaceTypeSpec(jsInterfaceClass)
+        val file = FileSpec.builder(jsInterfaceClass.packageName, jsInterfaceTypeSpec.name!!)
+                .addType(jsInterfaceTypeSpec)
+                .build()
+        file.writeTo(KotlinFiler.getInstance(processingEnv).newFile())
+    }
+
+
+    private fun buildJsEventInterfaceClass(typeElement: TypeElement): JsEventManagerClass {
+        val packageName = packageName(elements, typeElement)
+        val className = typeElement.asType().toString().split(".").last()
+        return JsEventManagerClass(packageName, className)
+    }
+
+    private fun createJsEventManagerFileExtension(jsEventManagerClass: JsEventManagerClass) {
+
+    }
 
 }

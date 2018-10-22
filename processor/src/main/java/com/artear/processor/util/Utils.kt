@@ -1,10 +1,12 @@
 package com.artear.processor.util
 
-import com.artear.processor.GeneratorClassException
+import javax.annotation.processing.Messager
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
+import javax.tools.Diagnostic
 
 
 internal object Utils {
@@ -41,6 +43,14 @@ internal object Utils {
             throw GeneratorClassException("The package of ${typeElement.simpleName} class has no name")
         }
         return pkg.qualifiedName.toString()
+    }
+
+    fun isValidClass(typeElement: TypeElement, messager: Messager): Boolean {
+        if (typeElement.kind != ElementKind.CLASS) {
+            messager.printMessage(Diagnostic.Kind.ERROR, "Can only be applied to classes,  element: $typeElement ")
+            return false
+        }
+        return true
     }
 
 

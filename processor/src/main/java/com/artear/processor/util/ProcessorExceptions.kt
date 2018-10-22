@@ -1,4 +1,4 @@
-package com.artear.processor
+package com.artear.processor.util
 
 class GeneratorClassException(toString: String) : IllegalStateException(toString)
 
