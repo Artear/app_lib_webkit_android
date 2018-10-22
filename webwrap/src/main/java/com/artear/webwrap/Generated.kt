@@ -5,10 +5,10 @@ import android.content.Context
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.artear.webwrap.presentation.webjs.*
+import com.artear.webwrap.presentation.webjs.data.AlertJSDataJsonAdapter
+import com.artear.webwrap.presentation.webjs.data.LogJSDataJsonAdapter
 import com.artear.webwrap.presentation.webjs.event.Alert
-import com.artear.webwrap.presentation.webjs.event.AlertJSDataJsonAdapter
 import com.artear.webwrap.presentation.webjs.event.Log
-import com.artear.webwrap.presentation.webjs.event.LogJSDataJsonAdapter
 import com.squareup.moshi.Moshi
 
 

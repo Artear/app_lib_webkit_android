@@ -6,10 +6,7 @@ import com.artear.webwrap.log
 import com.artear.webwrap.presentation.webjs.JSCallbackType
 import com.artear.webwrap.presentation.webjs.JSExecutable
 import com.artear.webwrap.presentation.webjs.SyncEventJs
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
-data class LogJSData(val message: String)
+import com.artear.webwrap.presentation.webjs.data.LogJSData
 
 @JsInterface("log")
 open class Log : SyncEventJs<LogJSData> {

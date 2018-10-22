@@ -19,27 +19,30 @@ internal object ArtearGenerator {
         builder.addSuperinterface(commandClassName)
 
         val contextClassName = ClassName("android.content", "Context").asNullable()
-        val contextParam = ParameterSpec.builder("context", contextClassName,
+        val contextNameParam = "context"
+        val contextParam = ParameterSpec.builder(contextNameParam, contextClassName,
                 KModifier.OVERRIDE).build()
-        val contextProperty = PropertySpec.builder("context", contextClassName)
-                .initializer("context")
+        val contextProperty = PropertySpec.builder(contextNameParam, contextClassName)
+                .initializer(contextNameParam)
                 .mutable(true)
                 .build()
 
         val targetClassName = ClassName(jsInterfaceClass.packageName, jsInterfaceClass.className)
-        val targetParam = ParameterSpec.builder(targetClassName.simpleName.toLowerCase(),
+        val targetNameParam = targetClassName.simpleName.toLowerCase()
+        val targetParam = ParameterSpec.builder(targetNameParam,
                 targetClassName, KModifier.PRIVATE)
                 .build()
-        val targetProperty = PropertySpec.builder(targetClassName.simpleName.toLowerCase(), targetClassName)
-                .initializer(targetClassName.simpleName.toLowerCase())
+        val targetProperty = PropertySpec.builder(targetNameParam, targetClassName)
+                .initializer(targetNameParam)
                 .build()
 
         val delegateClassName = ClassName(upPackageName, "WebJsDispatcher").asNullable()
-        val delegateParam = ParameterSpec.builder("delegate", delegateClassName,
+        val delegateNameParam = "delegate"
+        val delegateParam = ParameterSpec.builder(delegateNameParam, delegateClassName,
                 KModifier.OVERRIDE)
                 .build()
-        val delegateProperty = PropertySpec.builder("delegate", delegateClassName)
-                .initializer("delegate")
+        val delegateProperty = PropertySpec.builder(delegateNameParam, delegateClassName)
+                .initializer(delegateNameParam)
                 .mutable(true)
                 .build()
 
@@ -58,7 +61,8 @@ internal object ArtearGenerator {
                 .addProperty(delegateProperty)
                 .addProperty(keyProperty)
 
-        val indexParam = ParameterSpec.builder("index", Int::class).build()
+        val indexNameParam = "index"
+        val indexParam = ParameterSpec.builder(indexNameParam, Int::class).build()
         val dataJsonParam = ParameterSpec.builder("dataJson", String::class).build()
 
         val javaScriptClassName = ClassName("android.webkit", "JavascriptInterface")
@@ -69,8 +73,8 @@ internal object ArtearGenerator {
 
         /*
         try {
-            val jsonData = JSONObject(dataJson)
-            val data = LogJSData(jsonData.getString("message"))
+            val adapter = LogJSDataJsonAdapter(Moshi.Builder().build())
+            val data = adapter.fromJson(dataJson)
             val event = log.event(context!!, index, data)
             delegate!!.dispatch(event)
         } catch (ex: Exception) {
@@ -78,10 +82,28 @@ internal object ArtearGenerator {
         }
         */
 
-        val executeCode = CodeBlock.builder()
+        val nameInterfaceGenericType = jsInterfaceClass.interfaceType.second.substringAfterLast(".")
+
+        val classNameJsonAdapter = ClassName("$upPackageName.data", "${nameInterfaceGenericType}JsonAdapter")
+        val classNameMoshi = ClassName("com.squareup.moshi", "Moshi")
+
+        val codeBuilder = CodeBlock.builder()
                 .beginControlFlow("try")
-                .addStatement("%S", "")
-                .nextControlFlow("catch (ex: %T)", Exception::class)
+                .addStatement("val adapter = %T(%T.Builder().build())", classNameJsonAdapter,
+                        classNameMoshi)
+                .addStatement("val data = adapter.fromJson(dataJson)")
+
+        when (jsInterfaceClass.interfaceType.first) {
+            "SyncEventJs" -> {
+                codeBuilder.addStatement("val event = $targetNameParam.event($contextNameParam!!,$indexNameParam, data!!)")
+            }
+            "DeferEventJs" -> {
+                codeBuilder.addStatement("$targetNameParam.event($contextNameParam!!, $delegateNameParam!!, $indexNameParam, data!!)")
+            }
+        }
+
+
+        val executeCode = codeBuilder.nextControlFlow("catch (ex: %T)", Exception::class)
                 .endControlFlow()
                 .build()
 
@@ -96,12 +118,7 @@ internal object ArtearGenerator {
 
         builder.addFunction(executeFunction)
 
-        when (jsInterfaceClass.interfaceType.first) {
-            "SyncEventJs" -> {
-            }
-            "DeferEventJs" -> {
-            }
-        }
+
 
         return builder.build()
     }

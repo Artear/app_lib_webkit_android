@@ -5,11 +5,7 @@ import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import com.artear.annotations.JsInterface
 import com.artear.webwrap.presentation.webjs.*
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
-data class AlertJSData(val title: String,
-                       val message: String)
+import com.artear.webwrap.presentation.webjs.data.AlertJSData
 
 @JsInterface("alert")
 class Alert : DeferEventJs<AlertJSData> {
@@ -21,7 +17,6 @@ class Alert : DeferEventJs<AlertJSData> {
             Toast.makeText(context, data.message, Toast.LENGTH_LONG).show()
             delegate.dispatch(JSExecutable(index, JSCallbackType.SUCCESS, "Alert sent successfully"))
         }
-
         builder.create().show()
     }
 }
