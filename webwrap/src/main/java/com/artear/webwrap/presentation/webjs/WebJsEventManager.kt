@@ -2,8 +2,13 @@ package com.artear.webwrap.presentation.webjs
 
 import android.webkit.ValueCallback
 import android.webkit.WebView
+import com.artear.annotations.JsEventManager
+import com.artear.webwrap.presentation.webjs.event.Alert
+import com.artear.webwrap.presentation.webjs.event.AlertJs
+import com.artear.webwrap.presentation.webjs.event.Log
+import com.artear.webwrap.presentation.webjs.event.LogJs
 
-//@JsActionManager
+@JsEventManager
 class WebJsEventManager {
 
     companion object {
@@ -12,6 +17,20 @@ class WebJsEventManager {
 
     val commands: MutableList<CommandJs> = arrayListOf()
     var webView: WebView? = null
+
+    fun initialize(it: WebView) {
+        webView = it
+
+        //cargar esto...
+        val eventsJS: MutableList<EventJs> = arrayListOf()
+
+        val delegate: WebJsDispatcher = { executeJS(it) }
+
+        commands.add(LogJs(it.context, Log(), delegate))
+        commands.add(AlertJs(it.context, Alert(), delegate))
+
+        addJavascriptInterfaces(it)
+    }
 
     fun addJavascriptInterfaces(webView: WebView) {
         commands.forEach {

@@ -87,6 +87,10 @@ internal object ArtearGenerator {
         val classNameJsonAdapter = ClassName("$upPackageName.data", "${nameInterfaceGenericType}JsonAdapter")
         val classNameMoshi = ClassName("com.squareup.moshi", "Moshi")
 
+        val classNameDispatch = ClassName(upPackageName, "dispatch")
+        val classNameError = ClassName(upPackageName, "error")
+
+
         val codeBuilder = CodeBlock.builder()
                 .beginControlFlow("try")
                 .addStatement("val adapter = %T(%T.Builder().build())", classNameJsonAdapter,
@@ -96,6 +100,7 @@ internal object ArtearGenerator {
         when (jsInterfaceClass.interfaceType.first) {
             "SyncEventJs" -> {
                 codeBuilder.addStatement("val event = $targetNameParam.event($contextNameParam!!,$indexNameParam, data!!)")
+                codeBuilder.addStatement("$delegateNameParam!!.%T(event)", classNameDispatch)
             }
             "DeferEventJs" -> {
                 codeBuilder.addStatement("$targetNameParam.event($contextNameParam!!, $delegateNameParam!!, $indexNameParam, data!!)")
@@ -104,6 +109,7 @@ internal object ArtearGenerator {
 
 
         val executeCode = codeBuilder.nextControlFlow("catch (ex: %T)", Exception::class)
+                .addStatement("$delegateNameParam?.%T($indexNameParam, ex.message)", classNameError)
                 .endControlFlow()
                 .build()
 

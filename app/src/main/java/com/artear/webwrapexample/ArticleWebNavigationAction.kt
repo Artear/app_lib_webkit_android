@@ -11,7 +11,7 @@ class ArticleWebNavigationAction : WebNavigationAction {
 
     override fun execute(context: Context, uri: Uri): Boolean {
         if(context is AppCompatActivity){
-
+            return true
         }
         log { "ArticleWebNavigationAction - The context $context is not an AppCompatActivity" }
         return false
