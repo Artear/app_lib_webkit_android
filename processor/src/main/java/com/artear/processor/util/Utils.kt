@@ -1,14 +1,16 @@
-package com.artear.processor
+package com.artear.processor.util
 
+import com.artear.processor.GeneratorClassException
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 
+
 internal object Utils {
 
     fun <T> findAnnotationValue(element: Element, annotationClass: String?,
-                                        valueName: String, expectedType: Class<T>): T? {
+                                valueName: String, expectedType: Class<T>): T? {
         var ret: T? = null
         for (annotationMirror in element.annotationMirrors) {
             val annotationType = annotationMirror.annotationType
@@ -22,7 +24,7 @@ internal object Utils {
     }
 
     fun <T> extractValue(annotationMirror: AnnotationMirror,
-                                 valueName: String, expectedType: Class<T>): T? {
+                         valueName: String, expectedType: Class<T>): T? {
         val elementValues = HashMap(annotationMirror.elementValues)
         for ((key, value1) in elementValues) {
             if (key.simpleName.contentEquals(valueName)) {
@@ -36,8 +38,10 @@ internal object Utils {
     fun packageName(elementUtils: Elements, typeElement: Element): String {
         val pkg = elementUtils.getPackageOf(typeElement)
         if (pkg.isUnnamed) {
-            throw GeneratorClassExceptions("The package of ${typeElement.simpleName} class has no name")
+            throw GeneratorClassException("The package of ${typeElement.simpleName} class has no name")
         }
         return pkg.qualifiedName.toString()
     }
+
+
 }

@@ -1,3 +1,5 @@
 package com.artear.processor
 
-class GeneratorClassExceptions(toString: String) : IllegalStateException(toString)
+class GeneratorClassException(toString: String) : IllegalStateException(toString)
+
+class KotlinFilerException(toString: String) : IllegalStateException(toString)

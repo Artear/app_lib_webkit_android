@@ -1,5 +1,6 @@
 package com.artear.processor
 
+import com.artear.processor.process.JsInterfaceClass
 import com.squareup.kotlinpoet.*
 
 
@@ -7,7 +8,7 @@ internal object ArtearGenerator {
 
     private const val CLASS_NAME_JS_SUFFIX = "Js"
 
-    fun generateJsInterfaceTypeSpec(jsInterfaceClass: JSInterfaceClass): TypeSpec {
+    fun generateJsInterfaceTypeSpec(jsInterfaceClass: JsInterfaceClass): TypeSpec {
 
         val builder = TypeSpec.classBuilder(jsInterfaceClass.className + CLASS_NAME_JS_SUFFIX)
                 .addModifiers(KModifier.PUBLIC, KModifier.FINAL)

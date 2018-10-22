@@ -1,10 +1,14 @@
 package com.artear.processor
 
+import com.artear.annotations.JsEventManager
 import com.artear.annotations.JsInterface
-import com.artear.processor.Utils.findAnnotationValue
-import com.artear.processor.Utils.packageName
+import com.artear.processor.process.JsEventManagerClass
+import com.artear.processor.process.JsInterfaceClass
+import com.artear.processor.util.KotlinFiler
+import com.artear.processor.util.Utils.findAnnotationValue
+import com.artear.processor.util.Utils.packageName
+import com.artear.processor.util.log
 import com.squareup.kotlinpoet.FileSpec
-import java.io.File
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
@@ -21,10 +25,6 @@ import javax.tools.Diagnostic.Kind.ERROR
 
 class ArtearProcessor : AbstractProcessor() {
 
-    companion object {
-        const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-    }
-
     private lateinit var messager: Messager
     private lateinit var elements: Elements
     private lateinit var typeUtils: Types
@@ -40,37 +40,48 @@ class ArtearProcessor : AbstractProcessor() {
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()
 
     override fun getSupportedOptions(): MutableSet<String> {
-        return mutableSetOf(ArtearProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
+        return mutableSetOf(Config.KAPT_KOTLIN_GENERATED_OPTION_NAME)
     }
 
     override fun getSupportedAnnotationTypes(): Set<String> {
-        return setOf(JsInterface::class.java.canonicalName)
+        return setOf(JsInterface::class.java.canonicalName, JsEventManager::class.java.canonicalName)
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
-        val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
-                ?: run {
-                    processingEnv.messager.printMessage(ERROR, "Can't find the target directory for generated Kotlin files.")
-                    return false
-                }
-
+        KotlinFiler.getInstance(processingEnv)
 
         roundEnv.getElementsAnnotatedWith(JsInterface::class.java)
                 .filterIsInstance<TypeElement>()
                 .filter { isValidClass(it) }
-                .map { buildAnnotatedClass(it) }
-                .forEach { createJsInterfaceFile(it, kaptKotlinGeneratedDir) }
+                .map { buildJsInterfaceClass(it) }
+                .forEach { createJsInterfaceFile(it) }
+
+        roundEnv.getElementsAnnotatedWith(JsEventManager::class.java)
+                .filterIsInstance<TypeElement>()
+                .filter { isValidClass(it) }
+                .map { buildJsEventInterfaceClass(it) }
+                .forEach { createJsEventManagerFileExtension(it) }
 
         return true
     }
 
-    private fun createJsInterfaceFile(jsInterfaceClass: JSInterfaceClass, pathname: String) {
+    private fun createJsEventManagerFileExtension(jsEventManagerClass: JsEventManagerClass) {
+
+    }
+
+    private fun buildJsEventInterfaceClass(typeElement: TypeElement): JsEventManagerClass {
+        val packageName = packageName(elements, typeElement)
+        val className = typeElement.asType().toString().split(".").last()
+        return JsEventManagerClass(packageName, className)
+    }
+
+    private fun createJsInterfaceFile(jsInterfaceClass: JsInterfaceClass) {
         val jsInterfaceTypeSpec = ArtearGenerator.generateJsInterfaceTypeSpec(jsInterfaceClass)
         val file = FileSpec.builder(jsInterfaceClass.packageName, jsInterfaceTypeSpec.name!!)
                 .addType(jsInterfaceTypeSpec)
                 .build()
-        file.writeTo(File(pathname))
+        file.writeTo(KotlinFiler.getInstance(processingEnv).newFile())
     }
 
 
@@ -82,7 +93,7 @@ class ArtearProcessor : AbstractProcessor() {
         return true
     }
 
-    private fun buildAnnotatedClass(typeElement: TypeElement): JSInterfaceClass {
+    private fun buildJsInterfaceClass(typeElement: TypeElement): JsInterfaceClass {
 
         val packageName = packageName(elements, typeElement)
         val className = typeElement.asType().toString().split(".").last()
@@ -93,7 +104,7 @@ class ArtearProcessor : AbstractProcessor() {
                 .map { return@map getPairType(it) }
                 .first()
 
-        return JSInterfaceClass(packageName, className, key, interfacePairType)
+        return JsInterfaceClass(packageName, className, key, interfacePairType)
     }
 
     private fun getPairType(it: TypeMirror): Pair<String, String> {

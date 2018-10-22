@@ -1,4 +1,4 @@
-package com.artear.processor
+package com.artear.processor.util
 
 import javax.annotation.processing.Messager
 import javax.tools.Diagnostic
