@@ -9,6 +9,7 @@ import com.artear.webwrap.loadAllJsInterface
 import com.artear.webwrap.log
 import com.artear.webwrap.presentation.viewside.WebLoadListener
 import com.artear.webwrap.presentation.vm.WebCompatViewModel
+import com.artear.webwrap.presentation.webjs.WebJsDispatcher
 import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 import com.artear.webwrap.repo.WebRepoImpl
@@ -42,7 +43,12 @@ class MainActivity : ArtearActivity() {
         webWrapper.webNavigationActionManager = navigationActionManager
 
         //Load Event Js Controller
-        webWrapper.loadAllJsInterface(WebJsEventManager())
+        val webJsEventManager = WebJsEventManager()
+
+        val delegate : WebJsDispatcher = { webJsEventManager.executeJS(it) }
+        webJsEventManager.commands.add(ImageJs(this, Image(), delegate ))
+
+        webWrapper.loadAllJsInterface(webJsEventManager)
 
         lifecycle.addObserver(webWrapper)
 
