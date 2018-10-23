@@ -31,7 +31,9 @@ class ArtearProcessor : AbstractProcessor() {
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val processList = setOf(JsInterfaceProcess(processingEnv), JsEventManagerProcess(processingEnv))
+        val jsInterfaceProcess = JsInterfaceProcess(processingEnv)
+        val jsEventManagerProcess = JsEventManagerProcess(processingEnv, jsInterfaceProcess)
+        val processList = setOf(jsInterfaceProcess, jsEventManagerProcess)
         processList.forEach { roundEnv.executeProcess(it) }
         return true
     }

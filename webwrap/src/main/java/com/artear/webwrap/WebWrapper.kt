@@ -15,7 +15,7 @@ import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 
 //TODO check memory webview not null
-class WebWrapper(private var webView: WebView?) : LifecycleObserver {
+class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
     var loadListener: WebLoadListener? = null
@@ -63,9 +63,8 @@ class WebWrapper(private var webView: WebView?) : LifecycleObserver {
         }
     }
 
-    fun loadJsInterface(webJsEventManager: WebJsEventManager, autoInit: Boolean = true){
+    fun loadJsInterface(webJsEventManager: WebJsEventManager){
         webView?.let {
-//            if(autoInit) webJsEventManager.initialize(it)
             this.webJsEventManager = webJsEventManager
         }
     }

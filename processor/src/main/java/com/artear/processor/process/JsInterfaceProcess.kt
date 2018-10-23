@@ -17,7 +17,15 @@ class JsInterfaceProcess(processingEnv: ProcessingEnvironment) : Process<JsInter
 
     override val annotation: Class<out Annotation> = JsInterface::class.java
 
+    val jsInterfaceClassList = mutableListOf<JsInterfaceClass>()
+
     override fun buildAnnotationClass(typeElement: TypeElement): JsInterfaceClass {
+        val jsInterfaceClass = buildAnnotationClassBase(typeElement)
+        jsInterfaceClassList.add(jsInterfaceClass)
+        return jsInterfaceClass
+    }
+
+    private fun buildAnnotationClassBase(typeElement: TypeElement): JsInterfaceClass{
         val packageName = Utils.packageName(elements, typeElement)
         val className = typeElement.asType().toString().split(".").last()
         val unsafeKey = Utils.findAnnotationValue(typeElement, JsInterface::class.qualifiedName,

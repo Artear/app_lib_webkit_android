@@ -10,7 +10,9 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.TypeElement
 
 
-class JsEventManagerProcess(processingEnv: ProcessingEnvironment) : Process<JsEventManagerClass>(processingEnv) {
+class JsEventManagerProcess(processingEnv: ProcessingEnvironment,
+                            private val jsInterfaceProcess: JsInterfaceProcess) :
+        Process<JsEventManagerClass>(processingEnv) {
 
     override val annotation: Class<out Annotation> = JsEventManager::class.java
 
@@ -21,27 +23,18 @@ class JsEventManagerProcess(processingEnv: ProcessingEnvironment) : Process<JsEv
     }
 
     override fun createAnnotationFile(annotationClass: JsEventManagerClass) {
-        val jsEventManagerFuncSpec = ArtearGenerator.generateJsEventManagerTypeSpec(annotationClass)
-        val file = FileSpec.builder(annotationClass.packageName, "${annotationClass.className}Ext")
+        val jsEventManagerFuncSpec = ArtearGenerator.generateJsEventManagerTypeSpec(
+                annotationClass, jsInterfaceProcess.jsInterfaceClassList)
+        var file = FileSpec.builder(annotationClass.packageName, "${annotationClass.className}Ext")
                 .addFunction(jsEventManagerFuncSpec)
                 .build()
         file.writeTo(KotlinFiler.getInstance(processingEnv).newFile())
+
+        val webWrapperFuncSpec = ArtearGenerator.generateWebWrapperTypeSpec(annotationClass)
+        file = FileSpec.builder("com.artear.webwrap", "WebWrapperExt")
+                .addFunction(webWrapperFuncSpec)
+                .build()
+        file.writeTo(KotlinFiler.getInstance(processingEnv).newFile())
     }
-
-    /*
-       fun initialize(it: WebView) {
-        webView = it
-
-        //cargar esto...
-        val eventsJS: MutableList<EventJs> = arrayListOf()
-
-        val delegate: WebJsDispatcher = { executeJS(it) }
-
-        commands.add(LogJs(it.context, Log(), delegate))
-        commands.add(AlertJs(it.context, Alert(), delegate))
-
-        addJavascriptInterfaces(it)
-    }
-     */
 
 }

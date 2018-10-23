@@ -118,15 +118,58 @@ internal object ArtearGenerator {
         return builder.build()
     }
 
-    fun generateJsEventManagerTypeSpec(annotationClass: JsEventManagerClass) : FunSpec{
+    fun generateJsEventManagerTypeSpec(annotationClass: JsEventManagerClass,
+                                       jsInterfaceClassList: MutableList<JsInterfaceClass>): FunSpec {
 
         val className = ClassName(annotationClass.packageName, annotationClass.className)
         val builder = FunSpec.builder("initialize")
                 .receiver(className)
+                builder.returns(className)
                 .addModifiers(KModifier.PUBLIC)
-                .addStatement("")
+
+        val webViewClassName = ClassName("android.webkit", "WebView")
+        val webViewParam = ParameterSpec.builder("it", webViewClassName).build()
+
+        builder.addParameter(webViewParam)
+                .addStatement("webView = it")
+
+        val delegateClassName = ClassName(annotationClass.packageName, "WebJsDispatcher")
+        builder.addStatement("val delegate : %T = { executeJS(it) }", delegateClassName)
+
+        jsInterfaceClassList.forEach {
+            val eventJsClassName = ClassName(it.packageName, it.className)
+            val commandJsClassName = ClassName(it.packageName, it.className + CLASS_NAME_JS_SUFFIX)
+            builder.addStatement("commands.add(%T(it.context, %T(), delegate))",
+                    commandJsClassName, eventJsClassName)
+        }
+
+        builder.addStatement("addJavascriptInterfaces(it)")
+        builder.addStatement("return this")
 
         return builder.build()
     }
 
+    fun generateWebWrapperTypeSpec(annotationClass: JsEventManagerClass): FunSpec {
+        val className = ClassName("com.artear.webwrap", "WebWrapper")
+        val builder = FunSpec.builder("loadAllJsInterface")
+                .receiver(className)
+                .addModifiers(KModifier.PUBLIC)
+
+        val webJsEventManagerClassName = ClassName(annotationClass.packageName,
+                annotationClass.className)
+        val webJsEventManagerParam = ParameterSpec.builder(annotationClass.className.decapitalize(),
+                webJsEventManagerClassName).build()
+
+        val initializeClassName = ClassName(annotationClass.packageName, "initialize")
+        val webWrapperCode = CodeBlock.builder()
+                .beginControlFlow("webView?.let")
+                .addStatement("this.webJsEventManager = webJsEventManager.%T(it)", initializeClassName)
+                .endControlFlow()
+                .build()
+
+        builder.addParameter(webJsEventManagerParam)
+                .addCode(webWrapperCode)
+
+        return builder.build()
+    }
 }
