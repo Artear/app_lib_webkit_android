@@ -42,7 +42,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
@@ -65,8 +65,11 @@ dependencies {
 
     implementation 'com.github.yanex:takenoko:0.1'
 
-
     implementation project(':webwrap')
     implementation project(':annotations')
     kapt project(':processor')
+
+    implementation 'com.squareup.moshi:moshi:1.7.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.7.0'
 }

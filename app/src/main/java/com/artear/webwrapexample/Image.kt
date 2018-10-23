@@ -1,18 +1,16 @@
-package com.artear.webwrap.presentation.webjs.event
+package com.artear.webwrapexample
 
 import android.content.Context
 import com.artear.annotations.JsInterface
-import com.artear.webwrap.log
 import com.artear.webwrap.presentation.webjs.JSCallbackType
 import com.artear.webwrap.presentation.webjs.JSExecutable
 import com.artear.webwrap.presentation.webjs.SyncEventJs
 
-@JsInterface("log")
-open class Log : SyncEventJs<LogJsData> {
 
-    override fun event(context: Context, index: Int, data: LogJsData): JSExecutable {
-        log { "EventJS - Log - index = $index, log = ${data.message}" }
+@JsInterface("image")
+class Image : SyncEventJs<ImageJsData> {
+
+    override fun event(context: Context, index: Int, data: ImageJsData): JSExecutable {
         return JSExecutable(index, JSCallbackType.SUCCESS)
     }
-
 }

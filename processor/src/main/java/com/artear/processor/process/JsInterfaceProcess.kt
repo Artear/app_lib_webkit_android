@@ -5,7 +5,6 @@ import com.artear.processor.ArtearGenerator
 import com.artear.processor.process.model.JsInterfaceClass
 import com.artear.processor.util.KotlinFiler
 import com.artear.processor.util.Utils
-import com.artear.processor.util.log
 import com.squareup.kotlinpoet.FileSpec
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.TypeElement
@@ -47,8 +46,6 @@ class JsInterfaceProcess(processingEnv: ProcessingEnvironment) : Process<JsInter
         checkNotNull(typeInterface) {
             "Can not be null the type interface"
         }
-        messager.log("typeInterface $typeInterface")
-
         return Pair(element.qualifiedName.toString().substringAfterLast("."), typeInterface!!)
     }
 

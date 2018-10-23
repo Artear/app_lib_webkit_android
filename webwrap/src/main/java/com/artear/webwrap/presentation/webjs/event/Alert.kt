@@ -5,12 +5,11 @@ import android.support.v7.app.AlertDialog
 import android.widget.Toast
 import com.artear.annotations.JsInterface
 import com.artear.webwrap.presentation.webjs.*
-import com.artear.webwrap.presentation.webjs.data.AlertJSData
 
 @JsInterface("alert")
-class Alert : DeferEventJs<AlertJSData> {
+class Alert : DeferEventJs<AlertJsData> {
 
-    override fun event(context: Context, delegate: WebJsDispatcher, index: Int, data: AlertJSData) {
+    override fun event(context: Context, delegate: WebJsDispatcher, index: Int, data: AlertJsData) {
         val builder = AlertDialog.Builder(context)
         builder.setCancelable(true)
         builder.setOnCancelListener {

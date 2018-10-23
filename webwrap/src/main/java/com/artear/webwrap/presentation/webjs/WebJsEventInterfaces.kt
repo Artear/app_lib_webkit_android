@@ -18,11 +18,16 @@ fun WebJsDispatcher.error(index: Int, message: String?) {
 
 interface EventJs
 
-interface SyncEventJs<T> : EventJs {
+/**
+ * Each class that implements this must to have the annotation [com.squareup.moshi.JsonClass]
+ */
+interface EventJsData
+
+interface SyncEventJs<T : EventJsData> : EventJs {
     fun event(context: Context, index: Int, data: T): JSExecutable
 }
 
-interface DeferEventJs<T> : EventJs {
+interface DeferEventJs<T : EventJsData> : EventJs {
     fun event(context: Context, delegate: WebJsDispatcher, index: Int, data: T)
 }
 

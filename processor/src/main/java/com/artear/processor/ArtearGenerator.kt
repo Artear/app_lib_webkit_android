@@ -14,7 +14,7 @@ internal object ArtearGenerator {
         val builder = TypeSpec.classBuilder(jsInterfaceClass.className + CLASS_NAME_JS_SUFFIX)
                 .addModifiers(KModifier.PUBLIC, KModifier.FINAL)
 
-        val upPackageName = jsInterfaceClass.packageName.substringBeforeLast(".")
+        val upPackageName = "com.artear.webwrap.presentation.webjs"
         val commandClassName = ClassName(upPackageName, "CommandJs")
 
         builder.addSuperinterface(commandClassName)
@@ -74,7 +74,7 @@ internal object ArtearGenerator {
 
         val nameInterfaceGenericType = jsInterfaceClass.interfaceType.second.substringAfterLast(".")
 
-        val classNameJsonAdapter = ClassName("$upPackageName.data", "${nameInterfaceGenericType}JsonAdapter")
+        val classNameJsonAdapter = ClassName(jsInterfaceClass.packageName, "${nameInterfaceGenericType}JsonAdapter")
         val classNameMoshi = ClassName("com.squareup.moshi", "Moshi")
 
         val classNameDispatch = ClassName(upPackageName, "dispatch")
