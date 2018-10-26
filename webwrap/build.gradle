@@ -28,7 +28,7 @@ ext {
     siteUrl = 'https://github.com/Artear/app_lib_webwrap_android'
     gitUrl = 'https://github.com/Artear/app_lib_webwrap_android.git'
 
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.0.2'
 
     developerId = 'artear'
     developerName = 'Artear Moviles'
