@@ -1,1 +1,1 @@
-include ':app', ':webwrap', ':annotations', ':processor'
+include ':app', ':webwrap'

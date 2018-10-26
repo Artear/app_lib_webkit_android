@@ -1,7 +1,7 @@
 package com.artear.webwrapexample
 
 import android.content.Context
-import com.artear.annotations.JsInterface
+import com.artear.injector.api.JsInterface
 import com.artear.webwrap.presentation.webjs.JSCallbackType
 import com.artear.webwrap.presentation.webjs.JSExecutable
 import com.artear.webwrap.presentation.webjs.SyncEventJs

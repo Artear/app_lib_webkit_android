@@ -151,6 +151,7 @@ internal object ArtearGenerator {
 
     fun generateWebWrapperTypeSpec(annotationClass: JsEventManagerClass): FunSpec {
         val className = ClassName("com.artear.webwrap", "WebWrapper")
+        //TODO add all project classes and all webwrap classes
         val builder = FunSpec.builder("loadAllJsInterface")
                 .receiver(className)
                 .addModifiers(KModifier.PUBLIC)

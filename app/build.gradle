@@ -66,8 +66,8 @@ dependencies {
     implementation 'com.github.yanex:takenoko:0.1'
 
     implementation project(':webwrap')
-    implementation project(':annotations')
-    kapt project(':processor')
+    implementation 'com.artear.injector:injector-api:0.0.2'
+    kapt 'com.artear.injector:injector-compiler:0.0.2'
 
     implementation 'com.squareup.moshi:moshi:1.7.0'
     implementation 'com.squareup.okio:okio:1.15.0'

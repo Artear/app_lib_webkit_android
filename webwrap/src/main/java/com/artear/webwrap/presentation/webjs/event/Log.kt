@@ -1,7 +1,7 @@
 package com.artear.webwrap.presentation.webjs.event
 
 import android.content.Context
-import com.artear.annotations.JsInterface
+import com.artear.injector.api.JsInterface
 import com.artear.webwrap.log
 import com.artear.webwrap.presentation.webjs.JSCallbackType
 import com.artear.webwrap.presentation.webjs.JSExecutable

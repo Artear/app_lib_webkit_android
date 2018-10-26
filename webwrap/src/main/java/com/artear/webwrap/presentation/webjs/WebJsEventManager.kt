@@ -2,7 +2,7 @@ package com.artear.webwrap.presentation.webjs
 
 import android.webkit.ValueCallback
 import android.webkit.WebView
-import com.artear.annotations.JsEventManager
+import com.artear.injector.api.JsEventManager
 
 @JsEventManager
 class WebJsEventManager {

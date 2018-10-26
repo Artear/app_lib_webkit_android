@@ -99,8 +99,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation project(":annotations")
-    kapt project(":processor")
+    implementation 'com.artear.injector:injector-api:0.0.2'
+    kapt 'com.artear.injector:injector-compiler:0.0.2'
 
     implementation 'com.squareup.moshi:moshi:1.7.0'
     implementation 'com.squareup.okio:okio:1.15.0'
