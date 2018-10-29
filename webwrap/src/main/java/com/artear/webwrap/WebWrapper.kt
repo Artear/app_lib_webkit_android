@@ -17,14 +17,15 @@ import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 //TODO check memory webview not null
 class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
+    companion object {
+        private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
+    }
+
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
     var loadListener: WebLoadListener? = null
     var webNavigationActionManager: WebNavigationActionManager? = null
     var webJsEventManager: WebJsEventManager? = null
-
-    companion object {
-        private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
-    }
+    private var currentProgress: Int = 0
 
     init {
         debugConfig()
@@ -45,6 +46,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         webView?.apply {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
+            settings.allowFileAccessFromFileURLs = true
         }
     }
 
@@ -57,13 +59,16 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
                 override fun onProgressChanged(view: WebView, newProgress: Int) {
                     super.onProgressChanged(view, newProgress)
                     log(newProgress) { R.string.progress_load }
-                    if (newProgress >= progressMinToHide) loadListener?.onLoaded()
+                    if (newProgress >= progressMinToHide && newProgress != currentProgress) {
+                        currentProgress = newProgress
+                        loadListener?.onLoaded()
+                    }
                 }
             }
         }
     }
 
-    fun loadJsInterface(webJsEventManager: WebJsEventManager){
+    fun loadJsInterface(webJsEventManager: WebJsEventManager) {
         webView?.let {
             this.webJsEventManager = webJsEventManager
         }
