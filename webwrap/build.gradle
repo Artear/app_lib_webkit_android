@@ -37,12 +37,13 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 
-    timberVersion = "4.7.0"
+    //Logger
+    timberVersion = "4.7.1"
 
     //Artear
-    thumbnailkitVersion = "0.2.2"
-    multiTrackerVersion = "0.0.6"
-    toolsVersion = "0.0.10"
+    thumbnailkitVersion = "0.2.3"
+    multiTrackerVersion = "0.1.0"
+    toolsVersion = "0.0.12"
     uiViewVersion = "0.1.0"
     domainVersion = "0.0.2"
     injectorVersion = "0.0.2"
