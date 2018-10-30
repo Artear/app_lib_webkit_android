@@ -12,6 +12,6 @@ class WebNavigationActionPolicyDomain(private val domains: MutableList<String>) 
     override fun execute(context: Context, uri: Uri): Boolean {
         //There are no any domain in this list that is contained for uri host -> return true
         //If there are almost one domain that is contained for uri host -> return false
-        return !domains.any { uri.host.contains(it) }
+        return !domains.any { uri.toString().contains(it) }
     }
 }

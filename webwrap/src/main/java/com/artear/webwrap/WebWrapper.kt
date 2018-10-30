@@ -36,7 +36,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
     private fun debugConfig() {
         webView?.let {
             if (0 != it.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
-                WebView.setWebContentsDebuggingEnabled(true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    WebView.setWebContentsDebuggingEnabled(true)
+                }
             }
         }
     }
