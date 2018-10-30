@@ -20,6 +20,7 @@ interface EventJs
 
 /**
  * Each class that implements this must to have the annotation [com.squareup.moshi.JsonClass]
+ * with property generateAdapter = true
  */
 interface EventJsData
 

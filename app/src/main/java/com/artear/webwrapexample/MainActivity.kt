@@ -14,8 +14,7 @@ import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 import com.artear.webwrap.repo.WebRepoImpl
 import com.artear.webwrap.repo.WebUseCase
-import com.artear.webwrapexample.webjs.Images
-import com.artear.webwrapexample.webjs.ImagesJs
+import com.artear.webwrapexample.webjs.*
 import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : ArtearActivity() {
@@ -49,6 +48,8 @@ class MainActivity : ArtearActivity() {
 
         val delegate : WebJsDispatcher = { webJsEventManager.executeJS(it) }
         webJsEventManager.commands.add(ImagesJs(this, Images(), delegate ))
+        webJsEventManager.commands.add(MetadataJs(this, Metadata(), delegate ))
+        webJsEventManager.commands.add(PlaylistJs(this, Playlist(), delegate ))
 
         webWrapper.loadAllJsInterface(webJsEventManager)
 

@@ -7,14 +7,14 @@ import com.artear.webwrap.presentation.webjs.JSCallbackType
 import com.artear.webwrap.presentation.webjs.JSExecutable
 import com.artear.webwrap.presentation.webjs.SyncEventJs
 
+@JsInterface("metadata")
+class Metadata : SyncEventJs<MetadataJsData> {
 
-@JsInterface("images")
-class Images : SyncEventJs<ImagesJsData> {
+    override fun event(context: Context, index: Int, data: MetadataJsData): JSExecutable {
 
-    override fun event(context: Context, index: Int, data: ImagesJsData): JSExecutable {
-        log {
-            "Size images = ${data.items.size}"
-        }
+        log { "SyncEventJs - Metadata - Title = ${data.title}" }
+        log { "SyncEventJs - Share - Url = ${data.share.url}" }
+
         return JSExecutable(index, JSCallbackType.SUCCESS)
     }
 }

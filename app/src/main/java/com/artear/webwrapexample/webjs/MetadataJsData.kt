@@ -4,7 +4,7 @@ import com.artear.webwrap.presentation.webjs.EventJsData
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class ImagesJsData(val items: List<ImageJsData>) : EventJsData
+class MetadataJsData(val title: String, val share: ShareJsData) : EventJsData
 
 @JsonClass(generateAdapter = true)
-class ImageJsData(val text: String, val src: String) : EventJsData
+class ShareJsData(val url: String) : EventJsData

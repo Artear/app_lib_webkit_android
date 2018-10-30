@@ -12,7 +12,7 @@ class Playlist : SyncEventJs<PlaylistJsData> {
 
     override fun event(context: Context, index: Int, data: PlaylistJsData): JSExecutable {
         try {
-            log { "First video source = ${data.videos.first().source} " }
+            log { "First video source = ${data.items.first().source} " }
         } catch (ex: NoSuchElementException) {
             return JSExecutable(index, JSCallbackType.ERROR)
         }
