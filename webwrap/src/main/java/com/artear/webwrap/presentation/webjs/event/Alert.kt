@@ -16,6 +16,8 @@ class Alert : DeferEventJs<AlertJsData> {
             Toast.makeText(context, data.message, Toast.LENGTH_LONG).show()
             delegate.dispatch(JSExecutable(index, JSCallbackType.SUCCESS, "Alert sent successfully"))
         }
+        builder.setTitle(data.title)
+        builder.setMessage(data.message)
         builder.create().show()
     }
 }

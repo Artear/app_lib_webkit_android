@@ -48,3 +48,10 @@ inline fun <T : View> T.logError(vararg params: Any, messageId: () -> Int) {
 inline fun log(message: () -> String) {
     Timber.d(message())
 }
+
+/**
+ * Standard Warn - Calls the specified function [message] and delegates to Timber the warning.
+ */
+inline fun warn(message: () -> String) {
+    Timber.w(message())
+}
