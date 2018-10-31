@@ -7,7 +7,7 @@ defaults: &defaults
   docker:
     - image: circleci/android:api-27-alpha
   environment:
-    JVM_OPTS: -Xmx3200m
+    JVM_OPTS: -Xmx4g
 
 version: 2
 jobs:
