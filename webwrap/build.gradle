@@ -84,22 +84,22 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 
     //Artear
-    implementation "com.artear.multitracker:multitracker:$project.multiTrackerVersion"
-    implementation "com.artear.thumbnailkit:thumbnailkit:$project.thumbnailkitVersion"
-    implementation "com.artear.tools:tools:$project.toolsVersion"
-    implementation "com.artear.ui:view:$project.uiViewVersion"
-    implementation "com.artear.domain:domain:$project.domainVersion"
+    implementation "com.artear.multitracker:multitracker:$multiTrackerVersion"
+    implementation "com.artear.thumbnailkit:thumbnailkit:$thumbnailkitVersion"
+    implementation "com.artear.tools:tools:$toolsVersion"
+    implementation "com.artear.ui:view:$uiViewVersion"
+    implementation "com.artear.domain:domain:$domainVersion"
 
     //Logger
-    implementation "com.jakewharton.timber:timber:$project.timberVersion"
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     //ReactiveX
-    implementation "io.reactivex.rxjava2:rxjava:$project.rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
 
     //Injector
-    implementation "com.artear.injector:injector-api:$project.injectorVersion"
-    kapt "com.artear.injector:injector-compiler:$project.injectorVersion"
+    implementation "com.artear.injector:injector-api:$injectorVersion"
+    kapt "com.artear.injector:injector-compiler:$injectorVersion"
 
 
     implementation 'com.squareup.moshi:moshi:1.7.0'
