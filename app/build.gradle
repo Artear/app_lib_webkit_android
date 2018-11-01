@@ -29,7 +29,7 @@ android {
 
     defaultConfig {
         applicationId "com.artear.webwrapexample"
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode vCode
         versionName libraryVersion
