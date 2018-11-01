@@ -1,0 +1,58 @@
+package com.artear.webwrap.presentation.webjs
+
+import android.webkit.ValueCallback
+import android.webkit.WebView
+import com.artear.injector.api.JsEventManager
+
+@JsEventManager
+class WebJsEventManager {
+
+    companion object {
+        private const val JAVASCRIPT_INTERFACE_NAME = "Native_"
+    }
+
+    val commands: MutableList<CommandJs> = arrayListOf()
+    var webView: WebView? = null
+
+    fun addJavascriptInterfaces(webView: WebView) {
+        commands.forEach {
+            webView.addJavascriptInterface(it, JAVASCRIPT_INTERFACE_NAME.plus(it.key))
+        }
+    }
+
+    fun removeJavascriptInterfaces(webView: WebView) {
+        commands.forEach {
+            webView.removeJavascriptInterface(JAVASCRIPT_INTERFACE_NAME.plus(it.key))
+        }
+    }
+
+    fun removeAllCommands() {
+        commands.forEach { it.clean() }
+        commands.clear()
+    }
+
+    fun executeJS(jsExecutable: JSExecutable) {
+        evaluateJavaScript("Manager.callback(${jsExecutable.index},".plus(
+                "\"${jsExecutable.type}\", ${jsExecutable.data});"))
+    }
+
+    fun refreshIframe() {
+        evaluateJavaScript("Manager.refreshIframe()")
+    }
+
+    private fun evaluateJavaScript(script: String, callback: ValueCallback<String>? = null) {
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            webView?.evaluateJavascript(script, callback)
+        } else {
+            webView?.loadUrl("javascript:$script")
+        }
+    }
+
+}
+
+
+
+
+
+

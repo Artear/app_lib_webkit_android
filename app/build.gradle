@@ -1,29 +1,41 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'idea'
 
-ext {
-
-    //Image Handling
-    thumbnailkitVersion = "0.2.2"
-    //Tracking
-    multiTrackerVersion = "0.0.6"
-    //Tools
-    toolsVersion = "0.0.10"
-    //UI
-    uiViewVersion = "0.0.14"
+idea {
+    module {
+        sourceDirs += files('build/generated/source/kapt/main', 'build/generated/source/kaptKotlin/main')
+        generatedSourceDirs += files('build/generated/source/kapt/main', 'build/generated/source/kaptKotlin/main')
+    }
 }
 
+static int getVersionCode(branch) {
+    def versionCodeCommand = "git rev-list --count " + branch
+    return versionCodeCommand.execute().text.trim().toInteger()
+}
+
+static def getBranchName() {
+    return "git rev-parse --abbrev-ref HEAD".execute().text.trim()
+}
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    def branch = getBranchName()
+    def vCode = 0 + getVersionCode(branch)
+
     defaultConfig {
         applicationId "com.artear.webwrapexample"
-        minSdkVersion 19
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode vCode
+        versionName libraryVersion
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -31,21 +43,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '27.0.3'
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {
+    implementation project(':webwrap')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+
+    //Test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //Support
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 
     //Artear
     implementation "com.artear.multitracker:multitracker:$project.multiTrackerVersion"
     implementation "com.artear.thumbnailkit:thumbnailkit:$project.thumbnailkitVersion"
     implementation "com.artear.tools:tools:$project.toolsVersion"
     implementation "com.artear.ui:view:$project.uiViewVersion"
-    implementation project(':webwrap')
+
+    //Logger
+    implementation "com.jakewharton.timber:timber:$project.timberVersion"
+
+    implementation 'com.github.yanex:takenoko:0.1'
+
+    //Injector
+    implementation "com.artear.injector:injector-api:$project.injectorVersion"
+    kapt "com.artear.injector:injector-compiler:$project.injectorVersion"
+
+    implementation 'com.squareup.moshi:moshi:1.7.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.7.0'
 }
