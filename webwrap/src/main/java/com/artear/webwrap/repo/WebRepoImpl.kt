@@ -1,6 +1,6 @@
 package com.artear.webwrap.repo
 
-import com.artear.webwrap.log
+import com.artear.webwrap.util.log
 import java.net.HttpURLConnection
 import java.net.URL
 
