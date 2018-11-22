@@ -2,7 +2,7 @@ buildscript {
     ext {
 
         // -------- Library Version ---------
-        libraryVersion = "0.0.4"
+        libraryVersion = "0.0.5"
 
         // -------- Base Libraries ----------
         //Kotlin
@@ -33,7 +33,7 @@ buildscript {
         // -- Tracking
         multiTrackerVersion = "0.1.1"
         // -- Tools
-        toolsVersion = "0.0.13"
+        toolsVersion = "0.0.14"
         // -- UI
         uiViewVersion = "0.1.5"
         // -- Injector

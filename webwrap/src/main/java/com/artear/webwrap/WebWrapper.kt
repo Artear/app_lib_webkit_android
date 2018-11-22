@@ -10,9 +10,11 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.webkit.*
+import com.artear.tools.error.NestErrorFactory
 import com.artear.webwrap.presentation.viewside.WebLoadListener
 import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
+import com.artear.webwrap.util.log
 
 //TODO check memory webview not null
 class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
@@ -83,7 +85,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
                     super.onReceivedError(view, request, error)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         if (request.url.toString() == urlTarget) {
-                            loadListener?.onError()
+                            loadListener?.onError(NestErrorFactory.create(error))
                         }
                     }
                 }
@@ -91,10 +93,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
                 override fun onReceivedHttpError(view: WebView, request: WebResourceRequest,
                                                  errorResponse: WebResourceResponse) {
                     super.onReceivedHttpError(view, request, errorResponse)
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         if (request.url.toString() == urlTarget) {
-                            loadListener?.onError()
+                            loadListener?.onError(NestErrorFactory.create(errorResponse))
                         }
                     }
                 }

@@ -6,7 +6,6 @@ import com.artear.tools.error.NestError
 import com.artear.ui.base.ArtearActivity
 import com.artear.webwrap.WebWrapper
 import com.artear.webwrap.loadAllJsInterface
-import com.artear.webwrap.log
 import com.artear.webwrap.presentation.viewside.WebLoadListener
 import com.artear.webwrap.presentation.vm.WebCompatViewModel
 import com.artear.webwrap.presentation.webjs.WebJsDispatcher
@@ -14,6 +13,7 @@ import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 import com.artear.webwrap.repo.WebRepoImpl
 import com.artear.webwrap.repo.WebUseCase
+import com.artear.webwrap.util.log
 import com.artear.webwrapexample.webjs.*
 import kotlinx.android.synthetic.main.main_activity.*
 
@@ -29,8 +29,8 @@ class MainActivity : ArtearActivity() {
 
         webWrapper = WebWrapper(webViewExample)
         webWrapper.loadListener = object: WebLoadListener {
-            override fun onError() {
-                TODO("not implemented on error yet!! web wrapper")
+            override fun onError(error : NestError) {
+                log { "WebLoadListener - onError - errorType = ${error.type}"}
             }
 
             override fun onLoaded() {

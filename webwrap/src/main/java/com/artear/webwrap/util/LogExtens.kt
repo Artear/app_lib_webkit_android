@@ -1,4 +1,4 @@
-package com.artear.webwrap
+package com.artear.webwrap.util
 
 import android.app.Activity
 import android.support.v4.app.Fragment

@@ -3,8 +3,8 @@ package com.artear.webwrapexample
 import android.content.Context
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
-import com.artear.webwrap.log
 import com.artear.webwrap.presentation.webnavigation.WebNavigationAction
+import com.artear.webwrap.util.log
 
 
 class ArticleWebNavigationAction : WebNavigationAction {
