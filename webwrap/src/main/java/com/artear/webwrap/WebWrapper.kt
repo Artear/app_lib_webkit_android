@@ -10,7 +10,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.webkit.*
-import android.webkit.WebViewClient.ERROR_AUTHENTICATION
 import com.artear.tools.error.NestErrorFactory
 import com.artear.webwrap.presentation.viewside.WebLoadListener
 import com.artear.webwrap.presentation.webjs.WebJsEventManager
@@ -81,7 +80,6 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     fun loadUrl(urlTarget: String) {
         webView?.apply {
-            ERROR_AUTHENTICATION
             webViewClient = object : WebViewClient() {
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                     super.onReceivedError(view, request, error)
