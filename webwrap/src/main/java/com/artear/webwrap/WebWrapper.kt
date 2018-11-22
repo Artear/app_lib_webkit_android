@@ -73,6 +73,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
     }
 
     fun loadJsInterface(webJsEventManager: WebJsEventManager) {
+        check(webJsEventManager.commands.isNotEmpty()) {
+            "WebWrap - Commands is empty. The WebJsEventManager must have a command as least"
+        }
         webView?.let {
             this.webJsEventManager = webJsEventManager
         }
@@ -80,6 +83,11 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     fun loadUrl(urlTarget: String) {
         webView?.apply {
+            currentProgress = 0
+
+            //TODO check webViewClient
+            // urlTarget and loadListener both final, see old references maybe create a class
+            // and pass the listener. set new url target each time to load for validation
             webViewClient = object : WebViewClient() {
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                     super.onReceivedError(view, request, error)

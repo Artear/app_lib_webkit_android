@@ -2,7 +2,7 @@ buildscript {
     ext {
 
         // -------- Library Version ---------
-        libraryVersion = "0.0.5"
+        libraryVersion = "0.0.6"
 
         // -------- Base Libraries ----------
         //Kotlin
