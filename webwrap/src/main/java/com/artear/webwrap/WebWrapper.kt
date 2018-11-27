@@ -5,22 +5,37 @@ import android.annotation.TargetApi
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.webkit.*
+import android.widget.FrameLayout
 import com.artear.tools.error.NestErrorFactory
 import com.artear.webwrap.presentation.viewside.WebLoadListener
 import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
+import com.artear.webwrap.util.ActivityWindowConfig
 import com.artear.webwrap.util.log
 
+/**
+ * A wrapper of your webView. Manage the load of url and is a controller for url override
+ * executed in the web page across a navigation action. Also has enabled javascript and check all
+ * event from them using event js.
+ * The wrapper is a [LifecycleObserver], and is lifecycle-aware.
+ *
+ * @param webView The webView which will be wrapped
+ */
 //TODO check memory webview not null
 class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     companion object {
         private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
+        private val matchParentLayout = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
     }
 
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
@@ -28,6 +43,11 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
     var webNavigationActionManager: WebNavigationActionManager? = null
     var webJsEventManager: WebJsEventManager? = null
     private var currentProgress: Int = 0
+
+    //To execute a full screen view
+    private var customFullScreenView: View? = null
+    private var customViewCallback: WebChromeClient.CustomViewCallback? = null
+    private var originalConfig: ActivityWindowConfig? = null
 
     init {
         debugConfig()
@@ -60,6 +80,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
             setOnTouchListener(null)
             clearFocus()
             webChromeClient = object : WebChromeClient() {
+
                 override fun onProgressChanged(view: WebView, newProgress: Int) {
                     super.onProgressChanged(view, newProgress)
                     log(newProgress) { R.string.progress_load }
@@ -67,6 +88,68 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
                         currentProgress = newProgress
                         loadListener?.onLoaded()
                     }
+                }
+
+                override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+                    super.onShowCustomView(view, callback)
+
+                    if (customFullScreenView != null) {
+                        hideCustomFullScreenView()
+                        return
+                    }
+
+                    customFullScreenView = view
+                    val activity: AppCompatActivity? = context as? AppCompatActivity
+                    activity?.apply {
+                        val decorView = window.decorView as? FrameLayout
+                        decorView?.let {
+                            originalConfig = ActivityWindowConfig(it.systemUiVisibility,
+                                    requestedOrientation)
+                            customViewCallback = callback
+                            it.addView(customFullScreenView, matchParentLayout)
+                            changeSystemUiVisibility(it)
+                            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                        }
+                    }
+
+                }
+
+                private fun changeSystemUiVisibility(decorView: View) {
+                    var uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                            View.SYSTEM_UI_FLAG_FULLSCREEN
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        uiOptions = uiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    }
+                    decorView.systemUiVisibility = uiOptions
+                }
+
+                override fun onHideCustomView() {
+                    super.onHideCustomView()
+                    hideCustomFullScreenView()
+                }
+
+            }
+        }
+    }
+
+    private fun hideCustomFullScreenView() {
+        log { "WebWrap - WebView - hideCustomFullScreenView" }
+        val activity: AppCompatActivity? = webView?.context as? AppCompatActivity
+        activity?.apply {
+            originalConfig?.let { config ->
+                val decorView = window.decorView as? FrameLayout
+                decorView?.let {
+                    log { "WebWrap - WebView - hideCustomFullScreenView - request orientation" }
+                    it.removeView(customFullScreenView)
+                    customFullScreenView = null
+                    it.systemUiVisibility = config.systemUiVisibility
+                    requestedOrientation = config.requestedOrientation
+                    originalConfig = null
+                    // onCustomViewHidden also call onHideCustomView, when come from onDestroy
+                    // method but originalConfig was set null and validate that. Anyway not affect
+                    // but check for prevent any conflict.
+                    customViewCallback?.onCustomViewHidden()
+                    customViewCallback = null
                 }
             }
         }
@@ -165,6 +248,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
     fun onDestroy() {
         log { "WebWrap - onDestroy - webView = ${webView?.id}" }
         webView?.apply {
+            hideCustomFullScreenView()
             webJsEventManager?.removeJavascriptInterfaces(this)
             clearHistory()
             clearCache(true)
