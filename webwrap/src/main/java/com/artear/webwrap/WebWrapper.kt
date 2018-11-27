@@ -132,16 +132,14 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
-    private fun WebView.hideCustomFullScreenView() {
-        com.artear.webwrap.util.log { "WebWrap - WebView - hideCustomFullScreenView" }
-        val activity: AppCompatActivity? = context as? AppCompatActivity
+    private fun hideCustomFullScreenView() {
+        log { "WebWrap - WebView - hideCustomFullScreenView" }
+        val activity: AppCompatActivity? = webView?.context as? AppCompatActivity
         activity?.apply {
             originalConfig?.let { config ->
                 val decorView = window.decorView as? FrameLayout
                 decorView?.let {
-                    com.artear.webwrap.util.log {
-                        "WebWrap - WebView - hideCustomFullScreenView - request orientation"
-                    }
+                    log { "WebWrap - WebView - hideCustomFullScreenView - request orientation" }
                     it.removeView(customFullScreenView)
                     customFullScreenView = null
                     it.systemUiVisibility = config.systemUiVisibility
