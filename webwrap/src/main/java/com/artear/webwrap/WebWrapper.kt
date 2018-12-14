@@ -85,7 +85,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
                     super.onProgressChanged(view, newProgress)
                     log(newProgress) { R.string.progress_load }
 
-                    if(newProgress > 0 && currentProgress != 0){
+                    if(newProgress > 0 && currentProgress == 0){
                         loadListener?.onLoading()
                     }
 
