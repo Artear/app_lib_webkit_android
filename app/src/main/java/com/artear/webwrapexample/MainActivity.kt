@@ -29,6 +29,10 @@ class MainActivity : ArtearActivity() {
 
         webWrapper = WebWrapper(webViewExample)
         webWrapper.loadListener = object: WebLoadListener {
+            override fun onLoading() {
+                log { "WebLoadListener - onLoading!" }
+            }
+
             override fun onError(error : NestError) {
                 log { "WebLoadListener - onError - errorType = ${error.type}"}
             }

@@ -4,6 +4,12 @@ import com.artear.tools.error.NestError
 
 interface WebLoadListener {
 
+
+    /**
+     * Execute when start to loading content
+     */
+    fun onLoading()
+
     /**
      * Execute on 100% of progress is loaded.
      *
