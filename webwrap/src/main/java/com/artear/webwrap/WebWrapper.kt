@@ -43,6 +43,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
     var webNavigationActionManager: WebNavigationActionManager? = null
     var webJsEventManager: WebJsEventManager? = null
     private var currentProgress: Int = 0
+    private var loadingAction: Boolean = false
 
     //To execute a full screen view
     private var customFullScreenView: View? = null
@@ -85,7 +86,8 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
                     super.onProgressChanged(view, newProgress)
                     log(newProgress) { R.string.progress_load }
 
-                    if(newProgress > 0 && currentProgress == 0){
+                    if(newProgress > 0 && !loadingAction){
+                        loadingAction = true
                         loadListener?.onLoading()
                     }
 
@@ -172,7 +174,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
     fun loadUrl(urlTarget: String) {
         webView?.apply {
             currentProgress = 0
-
+            loadingAction = false
             //TODO check webViewClient
             // urlTarget and loadListener both final, see old references maybe create a class
             // and pass the listener. set new url target each time to load for validation
