@@ -34,7 +34,7 @@ android {
         versionCode vCode
         versionName libraryVersion
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -51,30 +51,32 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //Test
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation "com.android.support.test:runner:$espressoRunnerVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$extJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    //Support
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    //AndroidX
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
 
     //Artear
     implementation "com.artear.multitracker:multitracker:$multiTrackerVersion"
-    implementation "com.artear.thumbnailkit:thumbnailkit:$thumbnailkitVersion"
     implementation "com.artear.tools:tools:$toolsVersion"
     implementation "com.artear.ui:view:$uiViewVersion"
+    implementation "com.artear.domain:domain:$domainVersion"
+    implementation "com.artear.injector:injector-api:$injectorVersion"
+    kapt "com.artear.injector:injector-compiler:$injectorVersion"
 
     //Logger
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
-    implementation 'com.github.yanex:takenoko:0.1'
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    //Injector
-    implementation "com.artear.injector:injector-api:$injectorVersion"
-    kapt "com.artear.injector:injector-compiler:$injectorVersion"
+    implementation 'com.github.yanex:takenoko:0.1'
 
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     implementation "com.squareup.okio:okio:$okio"

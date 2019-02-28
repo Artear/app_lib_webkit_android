@@ -1,7 +1,8 @@
 package com.artear.webwrapexample
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import com.artear.tools.android.log.logD
 import com.artear.tools.error.NestError
 import com.artear.ui.base.ArtearActivity
 import com.artear.webwrap.WebWrapper
@@ -13,7 +14,6 @@ import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 import com.artear.webwrap.repo.WebRepoImpl
 import com.artear.webwrap.repo.WebUseCase
-import com.artear.webwrap.util.log
 import com.artear.webwrapexample.webjs.*
 import kotlinx.android.synthetic.main.main_activity.*
 
@@ -30,15 +30,15 @@ class MainActivity : ArtearActivity() {
         webWrapper = WebWrapper(webViewExample)
         webWrapper.loadListener = object: WebLoadListener {
             override fun onLoading() {
-                log { "WebLoadListener - onLoading!" }
+                logD { "WebLoadListener - onLoading!" }
             }
 
             override fun onError(error : NestError) {
-                log { "WebLoadListener - onError - errorType = ${error.type}"}
+                logD { "WebLoadListener - onError - errorType = ${error.type}"}
             }
 
             override fun onLoaded() {
-                log { "WebLoadListener - OnLoaded!" }
+                logD { "WebLoadListener - OnLoaded!" }
             }
         }
 
@@ -66,7 +66,7 @@ class MainActivity : ArtearActivity() {
         val viewModel = WebCompatViewModel(webUseCase = WebUseCase(WebRepoImpl()))
 
         viewModel.data.observe(this, Observer {
-            log { "Data changed! - now load url in web view!" }
+            logD { "Data changed! - now load url in web view!" }
             webWrapper.loadUrl(url)
         })
 

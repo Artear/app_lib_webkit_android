@@ -1,8 +1,8 @@
 package com.artear.webwrap.presentation.webjs.event
 
 import android.content.Context
-import android.support.v7.app.AlertDialog
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.artear.injector.api.JsInterface
 import com.artear.webwrap.presentation.webjs.*
 
