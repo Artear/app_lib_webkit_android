@@ -26,7 +26,6 @@ buildscript {
 
         // ------------- Artear -------------
 
-        thumbnailkitVersion = '0.2.4'
         multiTrackerVersion = '0.1.3'
         toolsVersion = '0.0.14'
         uiViewVersion = '0.2.0'
