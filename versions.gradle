@@ -10,6 +10,7 @@ buildscript {
 
         //Test
         junitVersion = '4.12'
+        testRunnerVersion = '1.1.1'
         extJunitVersion = '1.0.0'
         espressoCoreVersion = '3.1.1'
 
