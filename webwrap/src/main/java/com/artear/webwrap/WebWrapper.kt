@@ -2,25 +2,26 @@ package com.artear.webwrap
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
 import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.webkit.*
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import com.artear.tools.android.log.logD
+import com.artear.tools.android.log.logRes
 import com.artear.tools.error.NestErrorFactory
 import com.artear.webwrap.presentation.viewside.WebLoadListener
 import com.artear.webwrap.presentation.webjs.WebJsEventManager
 import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 import com.artear.webwrap.util.ActivityWindowConfig
-import com.artear.webwrap.util.log
 
 /**
  * A wrapper of your webView. Manage the load of url and is a controller for url override
@@ -84,9 +85,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
                 override fun onProgressChanged(view: WebView, newProgress: Int) {
                     super.onProgressChanged(view, newProgress)
-                    log(newProgress) { R.string.progress_load }
+                    logRes(newProgress) { R.string.progress_load }
 
-                    if(newProgress > 0 && !loadingAction){
+                    if (newProgress > 0 && !loadingAction) {
                         loadingAction = true
                         loadListener?.onLoading()
                     }
@@ -140,13 +141,13 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
     }
 
     private fun hideCustomFullScreenView() {
-        log { "WebWrap - WebView - hideCustomFullScreenView" }
+        logD { "WebWrap - WebView - hideCustomFullScreenView" }
         val activity: AppCompatActivity? = webView?.context as? AppCompatActivity
         activity?.apply {
             originalConfig?.let { config ->
                 val decorView = window.decorView as? FrameLayout
                 decorView?.let {
-                    log { "WebWrap - WebView - hideCustomFullScreenView - request orientation" }
+                    logD { "WebWrap - WebView - hideCustomFullScreenView - request orientation" }
                     it.removeView(customFullScreenView)
                     customFullScreenView = null
                     it.systemUiVisibility = config.systemUiVisibility
@@ -200,13 +201,13 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
                 @Suppress("OverridingDeprecatedMember")
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    log(url) { R.string.override_url }
+                    logRes(url) { R.string.override_url }
                     return overrideUrlLoading(view, Uri.parse(url))
                 }
 
                 @TargetApi(Build.VERSION_CODES.N)
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                    log(request.url.toString()) { R.string.override_url_nougat }
+                    logRes(request.url.toString()) { R.string.override_url_nougat }
                     return overrideUrlLoading(view, request.url)
                 }
             }
@@ -235,7 +236,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {
-        log { "WebWrap - onResume - webView = ${webView?.id}" }
+        logD { "WebWrap - onResume - webView = ${webView?.id}" }
         webView?.apply {
             onResume()
             resumeTimers()
@@ -244,7 +245,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onPause() {
-        log { "WebWrap - onPause - webView = ${webView?.id}" }
+        logD { "WebWrap - onPause - webView = ${webView?.id}" }
         webView?.apply {
             onPause()
             pauseTimers()
@@ -253,7 +254,7 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
-        log { "WebWrap - onDestroy - webView = ${webView?.id}" }
+        logD { "WebWrap - onDestroy - webView = ${webView?.id}" }
         webView?.apply {
             hideCustomFullScreenView()
             webJsEventManager?.removeJavascriptInterfaces(this)

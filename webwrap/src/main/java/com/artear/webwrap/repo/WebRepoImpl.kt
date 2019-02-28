@@ -1,6 +1,6 @@
 package com.artear.webwrap.repo
 
-import com.artear.webwrap.util.log
+import com.artear.tools.android.log.logD
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -11,7 +11,7 @@ class WebRepoImpl : WebRepository {
         return try {
             canReachBaseURL(url, timeout)
         } catch (e: Exception) {
-            log { "Fail trying to reach web url = $url. Message = ${e.message!!}" }
+            logD { "Fail trying to reach web url = $url. Message = ${e.message!!}" }
             false
         }
     }

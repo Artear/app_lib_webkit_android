@@ -2,7 +2,7 @@ package com.artear.webwrap.presentation.webjs.event
 
 import android.content.Context
 import com.artear.injector.api.JsInterface
-import com.artear.webwrap.util.log
+import com.artear.tools.android.log.logD
 import com.artear.webwrap.presentation.webjs.JSCallbackType
 import com.artear.webwrap.presentation.webjs.JSExecutable
 import com.artear.webwrap.presentation.webjs.SyncEventJs
@@ -11,7 +11,7 @@ import com.artear.webwrap.presentation.webjs.SyncEventJs
 open class Log : SyncEventJs<LogJsData> {
 
     override fun event(context: Context, index: Int, data: LogJsData): JSExecutable {
-        log { "EventJS - Log - index = $index, log = ${data.message}" }
+        logD { "EventJS - Log - index = $index, log = ${data.message}" }
         return JSExecutable(index, JSCallbackType.SUCCESS)
     }
 
