@@ -52,12 +52,17 @@ android {
     def branch = getBranchName()
     def vCode = 0 + getVersionCode(branch)
 
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${project.getName()}-${defaultConfig.versionName}-${variant.name}.aar"
+        }
+    }
+
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 28
         versionCode vCode
         versionName libraryVersion
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
