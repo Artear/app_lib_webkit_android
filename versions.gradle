@@ -4,33 +4,50 @@ buildscript {
         // -------- Library Version ---------
         libraryVersion = '0.0.9'
 
-        // -------- Base Libraries ----------
-        //Kotlin
-        kotlin_version = '1.3.31'
 
-        //Test
+        // ------------ Kotlin --------------
+        kotlin_version = '1.3.31'
+        kotlinVersion = kotlin_version
+
+
+        // ------------ Gradle --------------
+        gradle_build_version = '3.4.0'
+
+
+        // ------------ Bintray -------------
+        bintrayVersion = '1.8.4'
+
+
+        // ------------ Dokka ---------------
+        dokkaVersion = '0.9.18'
+
+
+        // ---------- dcendents -------------
+        dcendentsVersion = '2.1'
+
+        // ------------- Test ---------------
         junitVersion = '4.12'
         testRunnerVersion = '1.1.1'
+        testCoreVersion = '1.1.0'
         extJunitVersion = '1.0.0'
         espressoCoreVersion = '3.1.1'
 
+        // ----------- Framework ------------
         // -- AndroidX
         appCompatVersion = '1.0.2'
-
-        // -- Logger
-        timberVersion = '4.7.1'
-
         coroutinesVersion = '1.1.1'
 
+        //
+        timberVersion = '4.7.1'
         moshiVersion = '1.7.0'
         okio = '1.15.0'
 
         // ------------- Artear -------------
 
-        multiTrackerVersion = '0.1.3'
-        toolsVersion = '0.0.14'
-        uiViewVersion = '0.2.0'
-        injectorVersion = '0.0.4'
-        domainVersion = '0.0.5'
+        multiTrackerVersion = '0.1.4'
+        toolsVersion = '0.0.19'
+        uiViewVersion = '0.2.2'
+        injectorVersion = '0.0.5'
+        domainVersion = '0.0.6'
     }
 }
