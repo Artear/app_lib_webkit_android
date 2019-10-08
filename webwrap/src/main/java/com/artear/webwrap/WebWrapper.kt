@@ -24,11 +24,12 @@ import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 import com.artear.webwrap.util.ActivityWindowConfig
 
 /**
- * A wrapper of your webView. Manage the load of url and is a controller for url override
+ * A wrapper of your web view. Manage the load of url and is a controller for url override
  * executed in the web page across a navigation action. Also has enabled javascript and check all
  * event from them using event js.
  * The wrapper is a [LifecycleObserver], and is lifecycle-aware.
  *
+ * @author David Tolchinsky
  * @param webView The webView which will be wrapped
  */
 //TODO check memory webview not null

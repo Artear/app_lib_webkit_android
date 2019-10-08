@@ -1,0 +1,12 @@
+$dokka.format:html
+$dokka.linkExtension:html
+$dokka.location:com.artear.webwrap.presentation.webjs$dispatch(kotlin.Function1((com.artear.webwrap.presentation.webjs.JSExecutable, kotlin.Unit)), com.artear.webwrap.presentation.webjs.JSExecutable)com.artear.webwrap.presentation.webjs/kotlin.-function1/dispatch.html
+$dokka.location:com.artear.webwrap.presentation.webjs$error(kotlin.Function1((com.artear.webwrap.presentation.webjs.JSExecutable, kotlin.Unit)), kotlin.Int, kotlin.String)com.artear.webwrap.presentation.webjs/kotlin.-function1/error.html
+com.artear.webwrap
+com.artear.webwrap.presentation.viewside
+com.artear.webwrap.presentation.vm
+com.artear.webwrap.presentation.webjs
+com.artear.webwrap.presentation.webjs.event
+com.artear.webwrap.presentation.webnavigation
+com.artear.webwrap.repo
+com.artear.webwrap.util
