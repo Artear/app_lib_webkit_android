@@ -2,6 +2,9 @@ package com.artear.webwrap.presentation.viewside
 
 import com.artear.tools.error.NestError
 
+/**
+ * Simple interface to listen the url loading execution
+ */
 interface WebLoadListener {
 
 

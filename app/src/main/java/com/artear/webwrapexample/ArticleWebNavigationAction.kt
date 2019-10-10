@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.artear.tools.android.log.logD
 import com.artear.webwrap.presentation.webnavigation.WebNavigationAction
 
-
+/**
+ * Example of an [WebNavigationAction] that can catch and react to this [Uri].
+ */
 class ArticleWebNavigationAction : WebNavigationAction {
 
     override fun execute(context: Context, uri: Uri): Boolean {

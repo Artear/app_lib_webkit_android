@@ -5,7 +5,7 @@ import android.net.Uri
 
 /**
  * Works like a filter. Just add all [domains] that you want to manage, and this navigation action
- * will intercept all other urls that not contain in [domains]
+ * will intercept all other urls that does not contain in [domains]
  */
 class WebNavigationActionPolicyDomain(private val domains: MutableList<String>) : WebNavigationAction {
 
