@@ -9,13 +9,15 @@
 <br/>
 <h1>WebWrapper</h1>
 <code><span class="keyword">class </span><span class="identifier">WebWrapper</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">LifecycleObserver</span></code>
-<p>A wrapper of your webView. Manage the load of url and is a controller for url override
-executed in the web page across a navigation action. Also has enabled javascript and check all
-event from them using event js.
-The wrapper is a <a href="#">LifecycleObserver</a>, and is lifecycle-aware.</p>
+<p>A wrapper of your <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>. Manage the load of url and is a controller for url override
+executed in the web page across a <a href="../../com.artear.webwrap.presentation.webnavigation/-web-navigation-action-manager/index.html">WebNavigationActionManager</a>. Also has javascript enabled
+and check all event from them using <a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html">WebJsEventManager</a>.
+The wrapper is a <a href="#">LifecycleObserver</a> and is lifecycle-aware.</p>
 <h3>Parameters</h3>
 <p><a name="webView"></a>
-<code>webView</code> - The webView which will be wrapped</p>
+<code>webView</code> - The <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a> which will be wrapped</p>
+<p><strong>Author</strong><br/>
+David Tolchinsky</p>
 <h3>Constructors</h3>
 <table>
 <tbody>
@@ -25,10 +27,10 @@ The wrapper is a <a href="#">LifecycleObserver</a>, and is lifecycle-aware.</p>
 </td>
 <td>
 <code><span class="identifier">WebWrapper</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.WebWrapper$<init>(android.webkit.WebView)/webView">webView</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/webkit/WebView.html"><span class="identifier">WebView</span></a><span class="symbol">?</span><span class="symbol">)</span></code>
-<p>A wrapper of your webView. Manage the load of url and is a controller for url override
-executed in the web page across a navigation action. Also has enabled javascript and check all
-event from them using event js.
-The wrapper is a <a href="#">LifecycleObserver</a>, and is lifecycle-aware.</p>
+<p>A wrapper of your <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>. Manage the load of url and is a controller for url override
+executed in the web page across a <a href="../../com.artear.webwrap.presentation.webnavigation/-web-navigation-action-manager/index.html">WebNavigationActionManager</a>. Also has javascript enabled
+and check all event from them using <a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html">WebJsEventManager</a>.
+The wrapper is a <a href="#">LifecycleObserver</a> and is lifecycle-aware.</p>
 </td>
 </tr>
 </tbody>
@@ -41,28 +43,36 @@ The wrapper is a <a href="#">LifecycleObserver</a>, and is lifecycle-aware.</p>
 <p><a href="load-listener.html">loadListener</a></p>
 </td>
 <td>
-<code><span class="keyword">var </span><span class="identifier">loadListener</span><span class="symbol">: </span><a href="../../com.artear.webwrap.presentation.viewside/-web-load-listener/index.html"><span class="identifier">WebLoadListener</span></a><span class="symbol">?</span></code></td>
+<code><span class="keyword">var </span><span class="identifier">loadListener</span><span class="symbol">: </span><a href="../../com.artear.webwrap.presentation.viewside/-web-load-listener/index.html"><span class="identifier">WebLoadListener</span></a><span class="symbol">?</span></code>
+<p>The main listener to control the result of the url execution.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="progress-min-to-hide.html">progressMinToHide</a></p>
 </td>
 <td>
-<code><span class="keyword">var </span><span class="identifier">progressMinToHide</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+<code><span class="keyword">var </span><span class="identifier">progressMinToHide</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>Value of percent progress of the url that is loading to dispatch <a href="../../com.artear.webwrap.presentation.viewside/-web-load-listener/on-loaded.html">WebLoadListener.onLoaded</a>.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="web-js-event-manager.html">webJsEventManager</a></p>
 </td>
 <td>
-<code><span class="keyword">var </span><span class="identifier">webJsEventManager</span><span class="symbol">: </span><a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html"><span class="identifier">WebJsEventManager</span></a><span class="symbol">?</span></code></td>
+<code><span class="keyword">var </span><span class="identifier">webJsEventManager</span><span class="symbol">: </span><a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html"><span class="identifier">WebJsEventManager</span></a><span class="symbol">?</span></code>
+<p>The javascript event manager associated to this web wrapper.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="web-navigation-action-manager.html">webNavigationActionManager</a></p>
 </td>
 <td>
-<code><span class="keyword">var </span><span class="identifier">webNavigationActionManager</span><span class="symbol">: </span><a href="../../com.artear.webwrap.presentation.webnavigation/-web-navigation-action-manager/index.html"><span class="identifier">WebNavigationActionManager</span></a><span class="symbol">?</span></code></td>
+<code><span class="keyword">var </span><span class="identifier">webNavigationActionManager</span><span class="symbol">: </span><a href="../../com.artear.webwrap.presentation.webnavigation/-web-navigation-action-manager/index.html"><span class="identifier">WebNavigationActionManager</span></a><span class="symbol">?</span></code>
+<p>The navigation manager associated to this web wrapper.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -74,49 +84,64 @@ The wrapper is a <a href="#">LifecycleObserver</a>, and is lifecycle-aware.</p>
 <p><a href="enabled-cookie-manager.html">enabledCookieManager</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">enabledCookieManager</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">enabledCookieManager</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Call this method for enable the cookies in your <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="extra-config.html">extraConfig</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">extraConfig</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">extraConfig</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Any other configuration</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="load-js-interface.html">loadJsInterface</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">loadJsInterface</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.WebWrapper$loadJsInterface(com.artear.webwrap.presentation.webjs.WebJsEventManager)/webJsEventManager">webJsEventManager</span><span class="symbol">:</span>&nbsp;<a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html"><span class="identifier">WebJsEventManager</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">loadJsInterface</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.WebWrapper$loadJsInterface(com.artear.webwrap.presentation.webjs.WebJsEventManager)/webJsEventManager">webJsEventManager</span><span class="symbol">:</span>&nbsp;<a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html"><span class="identifier">WebJsEventManager</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Load the javascript interface between your application and <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>. That interface
+is a <a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html">WebJsEventManager</a>.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="load-url.html">loadUrl</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">loadUrl</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.WebWrapper$loadUrl(kotlin.String)/urlTarget">urlTarget</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">loadUrl</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.WebWrapper$loadUrl(kotlin.String)/urlTarget">urlTarget</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Load a new <a href="load-url.html#com.artear.webwrap.WebWrapper$loadUrl(kotlin.String)/urlTarget">urlTarget</a> into your <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="on-destroy.html">onDestroy</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">onDestroy</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">onDestroy</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Part of <a href="#">LifecycleObserver</a> flow. Clean all objects. Also the cache on the <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="on-pause.html">onPause</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">onPause</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">onPause</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Part of <a href="#">LifecycleObserver</a> flow. Execute at pause the lifecycle an notify to the <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="on-resume.html">onResume</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">onResume</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">onResume</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Part of <a href="#">LifecycleObserver</a> flow. Execute at resume the lifecycle an notify to the <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>.</p>
+</td>
 </tr>
 </tbody>
 </table>

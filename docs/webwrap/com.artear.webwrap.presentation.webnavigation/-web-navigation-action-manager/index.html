@@ -9,6 +9,17 @@
 <br/>
 <h1>WebNavigationActionManager</h1>
 <code><span class="keyword">class </span><span class="identifier">WebNavigationActionManager</span></code>
+<p>A manager that have some actions to process. This actions should be added before load the url in
+<a href="../../com.artear.webwrap/-web-wrapper/index.html">WebWrapper</a>. The wrapper has a client to override the loading of any url in the web view and
+use <a href="#">WebWrapper.overrideUrlLoading</a> to pass the responsibility to this class to process
+that <a href="https://developer.android.com/reference/android/net/Uri.html">Uri</a>.</p>
+<p>The actions must be a <a href="../-web-navigation-action/index.html">WebNavigationAction</a> and your aim is catch only the url that need and
+the result is a navigation inside or outside your application.</p>
+<p>Any another action that does not imply a navigation must be implements with <a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html">WebJsEventManager</a>.</p>
+<p><strong>See Also</strong><br/>
+<p><a href="../../com.artear.webwrap.presentation.webjs/-web-js-event-manager/index.html">WebJsEventManager</a></p>
+<p><a href="../../com.artear.webwrap/-web-wrapper/index.html">WebWrapper</a></p>
+</p>
 <h3>Constructors</h3>
 <table>
 <tbody>
@@ -17,7 +28,12 @@
 <p><a href="-init-.html">&lt;init&gt;</a></p>
 </td>
 <td>
-<code><span class="identifier">WebNavigationActionManager</span><span class="symbol">(</span><span class="symbol">)</span></code></td>
+<code><span class="identifier">WebNavigationActionManager</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>A manager that have some actions to process. This actions should be added before load the url in
+<a href="../../com.artear.webwrap/-web-wrapper/index.html">WebWrapper</a>. The wrapper has a client to override the loading of any url in the web view and
+use <a href="#">WebWrapper.overrideUrlLoading</a> to pass the responsibility to this class to process
+that <a href="https://developer.android.com/reference/android/net/Uri.html">Uri</a>.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -29,21 +45,27 @@
 <p><a href="add-action.html">addAction</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">addAction</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager$addAction(com.artear.webwrap.presentation.webnavigation.WebNavigationAction)/webNavigationAction">webNavigationAction</span><span class="symbol">:</span>&nbsp;<a href="../-web-navigation-action/index.html"><span class="identifier">WebNavigationAction</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">addAction</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager$addAction(com.artear.webwrap.presentation.webnavigation.WebNavigationAction)/webNavigationAction">webNavigationAction</span><span class="symbol">:</span>&nbsp;<a href="../-web-navigation-action/index.html"><span class="identifier">WebNavigationAction</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add a new action to this manager.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="process-uri.html">processUri</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">processUri</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager$processUri(android.content.Context, android.net.Uri)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager$processUri(android.content.Context, android.net.Uri)/uri">uri</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/net/Uri.html"><span class="identifier">Uri</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">processUri</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager$processUri(android.content.Context, android.net.Uri)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager$processUri(android.content.Context, android.net.Uri)/uri">uri</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/net/Uri.html"><span class="identifier">Uri</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Called from <a href="../../com.artear.webwrap/-web-wrapper/index.html">WebWrapper</a> to process each <a href="https://developer.android.com/reference/android/net/Uri.html">Uri</a> dispatched by the web view client.</p>
+</td>
 </tr>
 <tr>
 <td>
 <p><a href="remove-all-actions.html">removeAllActions</a></p>
 </td>
 <td>
-<code><span class="keyword">fun </span><span class="identifier">removeAllActions</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">removeAllActions</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove all actions from manager.</p>
+</td>
 </tr>
 </tbody>
 </table>
