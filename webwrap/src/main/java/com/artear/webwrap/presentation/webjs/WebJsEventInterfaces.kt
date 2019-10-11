@@ -58,11 +58,17 @@ interface DeferEventJs<T : EventJsData> : EventJs {
 }
 
 /**
- * //TODO!!!
+ * The process unit of [WebJsEventManager]. You must extends and implement this for a
+ * valid execution.
+ *
  */
 interface CommandJs {
     val key: String
     var context: Context?
+
+    /**
+     * Call when the execution finished.
+     */
     var delegate: WebJsDispatcher?
 
     fun execute(index: Int, dataJson: String)
