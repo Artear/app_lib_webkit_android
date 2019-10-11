@@ -6,7 +6,13 @@ import com.artear.tools.android.log.logD
 import com.artear.webwrap.presentation.webjs.JSCallbackType
 import com.artear.webwrap.presentation.webjs.JSExecutable
 import com.artear.webwrap.presentation.webjs.SyncEventJs
+import com.artear.webwrap.presentation.webjs.WebJsEventManager
 
+/**
+ * Util sync event to log that you need.
+ *
+ * @see WebJsEventManager
+ */
 @JsInterface("log")
 open class Log : SyncEventJs<LogJsData> {
 

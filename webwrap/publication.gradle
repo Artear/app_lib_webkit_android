@@ -4,7 +4,28 @@ apply plugin: 'org.jetbrains.dokka-android'
 
 dokka {
     outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
+    outputDirectory = "./docs"
+}
+
+task artearDoc(dependsOn: dokka) {
+    doLast {
+        def artifact = project.ext.artifact
+        def lines = ["<!DOCTYPE html>\n",
+                     "<html lang=\"en\">\n",
+                     "<head>\n",
+                     "<meta http-equiv=\"refresh\" content=\"0;URL='./$artifact/index.html'\" />\n",
+                     "</head>\n",
+                     "</html>\n"]
+        def file = file(new File("../docs/index.html"))
+        if (!file.exists()) {
+            lines.forEach { file.append(it) }
+        }
+    }
+}
+
+configure(artearDoc) {
+    group = 'documentation'
+    description = 'Execute dokka and set index in docs folder'
 }
 
 if (project.hasProperty("kotlin")) { //Kotlin libraries

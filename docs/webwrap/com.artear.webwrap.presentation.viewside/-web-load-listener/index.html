@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>WebLoadListener - webwrap</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">webwrap</a>&nbsp;/&nbsp;<a href="../index.html">com.artear.webwrap.presentation.viewside</a>&nbsp;/&nbsp;<a href="./index.html">WebLoadListener</a><br/>
+<br/>
+<h1>WebLoadListener</h1>
+<code><span class="keyword">interface </span><span class="identifier">WebLoadListener</span></code>
+<p>Simple interface to listen the url loading execution</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="on-error.html">onError</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onError</span><span class="symbol">(</span><span class="identifier" id="com.artear.webwrap.presentation.viewside.WebLoadListener$onError(com.artear.tools.error.NestError)/error">error</span><span class="symbol">:</span>&nbsp;<span class="identifier">NestError</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Notify when an error occurs on loading the main url. Can be from receive error or http error.
+Note: you should do something when the error is notified.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-loaded.html">onLoaded</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onLoaded</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Execute on 100% of progress is loaded.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-loading.html">onLoading</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onLoading</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Execute when start to loading content</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

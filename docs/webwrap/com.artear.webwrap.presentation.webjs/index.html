@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.artear.webwrap.presentation.webjs - webwrap</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">webwrap</a>&nbsp;/&nbsp;<a href="./index.html">com.artear.webwrap.presentation.webjs</a><br/>
+<br/>
+<h2>Package com.artear.webwrap.presentation.webjs</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-command-js/index.html">CommandJs</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">CommandJs</span></code>
+<p>The process unit of <a href="-web-js-event-manager/index.html">WebJsEventManager</a>. You must extends and implement this for a
+valid execution.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-defer-event-js/index.html">DeferEventJs</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">DeferEventJs</span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-js-data.html"><span class="identifier">EventJsData</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-js.html"><span class="identifier">EventJs</span></a></code>
+<p>A defer javascript event. Execute and send a delegate <a href="-web-js-dispatcher.html">WebJsDispatcher</a> to respond when
+finish the execution.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-event-js.html">EventJs</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">EventJs</span></code>
+<p>Main interface for a javascript event. Can be a <a href="-sync-event-js/index.html">SyncEventJs</a> or <a href="-defer-event-js/index.html">DeferEventJs</a>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-event-js-data.html">EventJsData</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">EventJsData</span></code>
+<p>Each class that implements this must to have the annotation <a href="#">JsonClass</a>
+with property generateAdapter = true</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-j-s-callback-type/index.html">JSCallbackType</a></p>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">JSCallbackType</span></code>
+<p>Two types for inform to web page the result of execution.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-j-s-executable/index.html">JSExecutable</a></p>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">JSExecutable</span></code>
+<p>Simple javascript executable that is needed to communicate with the web page.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-sync-event-js/index.html">SyncEventJs</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">SyncEventJs</span><span class="symbol">&lt;</span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-js-data.html"><span class="identifier">EventJsData</span></a><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-js.html"><span class="identifier">EventJs</span></a></code>
+<p>Synchronize javascript event. Execute and return a <a href="-j-s-executable/index.html">JSExecutable</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-web-js-event-manager/index.html">WebJsEventManager</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">WebJsEventManager</span></code>
+<p>A web javascript event manager act like a mediator among your application and your <a href="https://developer.android.com/reference/android/webkit/WebView.html">WebView</a>.
+Establish a communication between a <a href="-command-js/index.html">CommandJs</a> and each javascript event that you want to
+respond.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Type Aliases</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-web-js-dispatcher.html">WebJsDispatcher</a></p>
+</td>
+<td>
+<code><span class="keyword">typealias </span><span class="identifier">WebJsDispatcher</span>&nbsp;<span class="symbol">=</span>&nbsp;<span class="symbol">(</span><span class="identifier">data</span><span class="symbol">:</span>&nbsp;<a href="-j-s-executable/index.html"><span class="identifier">JSExecutable</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>A type alias for a dispatcher delegate function for javascript events. Receive a
+<a href="-j-s-executable/index.html">JSExecutable</a> and return a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Extensions for External Classes</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="kotlin.-function1/index.html">kotlin.Function1</a></p>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

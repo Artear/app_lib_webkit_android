@@ -7,6 +7,11 @@ import com.artear.ui.viewmodel.ArtearViewModel
 import com.artear.webwrap.repo.WebUseCase
 
 /**
+ * The main view model to request and check the url.
+ *
+ * Note: is Marshmallow or up, always return true.
+ *
+ * @param webUseCase needed for delegate and call to valid url.
  *
  */
 class WebCompatViewModel(private val webUseCase: WebUseCase) : ArtearViewModel<Boolean>() {
@@ -22,6 +27,9 @@ class WebCompatViewModel(private val webUseCase: WebUseCase) : ArtearViewModel<B
         })
     }
 
+    /**
+     * Execute the main use case for a valid url check.
+     */
     private fun executeCompatLoadUrl(url: String) {
         webUseCase(url, SimpleReceiver(
                 onNextDelegate = {

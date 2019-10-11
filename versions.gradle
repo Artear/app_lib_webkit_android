@@ -1,53 +1,104 @@
-buildscript {
-    ext {
+def buildVersions = [:]
 
-        // -------- Library Version ---------
-        libraryVersion = '0.0.10'
+def debug = [:]
+debug.minSdk = 24
+buildVersions.debug = debug
+buildVersions.minSdk = 17
+buildVersions.targetSdk = 28
+buildVersions.buildTools = "28.0.3"
+ext.buildVersions = buildVersions
 
+ext.libraryVersion = "0.0.11"
 
-        // ------------ Kotlin --------------
-        kotlin_version = '1.3.31'
-        kotlinVersion = kotlin_version
+def libVersions = [
+        kotlinVersion    : '1.3.50',
+        android          : [
+                gradleBuildToolsVersion: "3.5.0"
+        ],
+        artear           : [
+                multiTrackerVersion: "0.1.4",
+                injectorVersion    : "0.0.7",
+                toolsVersion       : "0.0.19",
+                uiViewVersion      : "0.2.4",
+                domainVersion      : "0.0.8"
+        ],
+        espresso         : [
+                coreVersion: "3.2.0"
+        ],
+        junitVersion     : "4.12",
+        mockitoVersion   : "3.0.0",
+        materialVersion  : "1.0.0",
+        square           : [
+                moshiVersion    : "1.8.0",
+                moshiKaptVersion: "1.8.0",
+                okioVersion     : "2.2.2"
+        ],
+        coroutinesVersion: "1.1.1",
+        androidx         : [
+                appcompatVersion : "1.1.0",
+                testRunnerVersion: "1.2.0",
+                testCoreVersion  : "1.2.0",
+                extJunitVersion  : "1.1.1"
+        ],
+        timberVersion    : "4.7.1",
+        plugin           : [
+                bintrayVersion   : "1.8.4",
+                dokkaVersion     : "0.9.18",
+                dcendentsVersion : "2.1"
+        ]
+]
 
+ext.libVersions = libVersions
 
-        // ------------ Gradle --------------
-        gradle_build_version = '3.4.0'
+def lib = [
+        kotlin  : [
+                plugin           : "org.jetbrains.kotlin:kotlin-gradle-plugin:${libVersions.kotlinVersion}",
+                standardLib      : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libVersions.kotlinVersion}",
+                coroutinesCore   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${libVersions.coroutinesVersion}",
+                coroutinesAndroid: "org.jetbrains.kotlinx:kotlinx-coroutines-android:${libVersions.coroutinesVersion}"
+        ],
+        android : [
+                toolsBuildGradle: "com.android.tools.build:gradle:${libVersions.android.gradleBuildToolsVersion}"
+        ],
+        artear  : [
+                uiView      : "com.artear.ui:view:${libVersions.artear.uiViewVersion}",
+                tools       : "com.artear.tools:tools:${libVersions.artear.toolsVersion}",
+                multitracker: "com.artear.multitracker:multitracker:${libVersions.artear.multiTrackerVersion}",
+                injector    : "com.artear.injector:injector-api:${libVersions.artear.injectorVersion}",
+                injectorKapt: "com.artear.injector:injector-compiler:${libVersions.artear.injectorVersion}",
+                domain      : "com.artear.domain:domain:${libVersions.artear.domainVersion}",
+        ],
+        espresso: [
+                core: "androidx.test.espresso:espresso-core:${libVersions.espresso.coreVersion}"
+        ],
+        junit   : [
+                library: "junit:junit:${libVersions.junitVersion}"
+        ],
+        mockito : [
+                library: "org.mockito:mockito-core:${libVersions.mockitoVersion}"
+        ],
+        square  : [
+                moshi    : "com.squareup.moshi:moshi:${libVersions.square.moshiVersion}",
+                moshiKapt: "com.squareup.moshi:moshi-kotlin-codegen:${libVersions.square.moshiKaptVersion}",
+                okio     : "com.squareup.okio:okio:${libVersions.square.okioVersion}",
+        ],
+        material: [
+                library: "com.google.android.material:material:${libVersions.materialVersion}"
+        ],
+        androidx: [
+                appcompat : "androidx.appcompat:appcompat:${libVersions.androidx.appcompatVersion}",
+                testRunner: "androidx.test:runner:${libVersions.androidx.testRunnerVersion}",
+                testCore  : "androidx.test:core:${libVersions.androidx.testCoreVersion}",
+                extJunit  : "androidx.test.ext:junit:${libVersions.androidx.extJunitVersion}"
+        ],
+        timber  : [
+                library: "com.jakewharton.timber:timber:${libVersions.timberVersion}"
+        ],
+        plugin  : [
+                bintray       : "com.jfrog.bintray.gradle:gradle-bintray-plugin:${libVersions.plugin.bintrayVersion}",
+                dcendents     : "com.github.dcendents:android-maven-gradle-plugin:${libVersions.plugin.dcendentsVersion}",
+                dokka         : "org.jetbrains.dokka:dokka-android-gradle-plugin:${libVersions.plugin.dokkaVersion}",
+        ]
+]
 
-
-        // ------------ Bintray -------------
-        bintrayVersion = '1.8.4'
-
-
-        // ------------ Dokka ---------------
-        dokkaVersion = '0.9.18'
-
-
-        // ---------- dcendents -------------
-        dcendentsVersion = '2.1'
-
-        // ------------- Test ---------------
-        junitVersion = '4.12'
-        testRunnerVersion = '1.1.1'
-        testCoreVersion = '1.1.0'
-        extJunitVersion = '1.0.0'
-        espressoCoreVersion = '3.1.1'
-
-        // ----------- Framework ------------
-        // -- AndroidX
-        appCompatVersion = '1.0.2'
-        coroutinesVersion = '1.1.1'
-
-        //
-        timberVersion = '4.7.1'
-        moshiVersion = '1.7.0'
-        okio = '1.15.0'
-
-        // ------------- Artear -------------
-
-        multiTrackerVersion = '0.1.4'
-        toolsVersion = '0.0.19'
-        uiViewVersion = '0.2.2'
-        injectorVersion = '0.0.5'
-        domainVersion = '0.0.6'
-    }
-}
+ext.lib = lib

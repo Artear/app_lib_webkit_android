@@ -21,16 +21,16 @@ static def getBranchName() {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion buildVersions.targetSdk
+    buildToolsVersion buildVersions.buildTools
 
     def branch = getBranchName()
     def vCode = 0 + getVersionCode(branch)
 
     defaultConfig {
         applicationId "com.artear.webwrapexample"
-        minSdkVersion 17
-        targetSdkVersion 28
+        minSdkVersion buildVersions.minSdk
+        targetSdkVersion buildVersions.targetSdk
         versionCode vCode
         versionName libraryVersion
 
@@ -51,35 +51,32 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //Test
-    testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test:runner:$testRunnerVersion"
-    androidTestImplementation "androidx.test.ext:junit:$extJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
-
-    //Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    testImplementation lib.junit.library
+    androidTestImplementation lib.androidx.testRunner
+    androidTestImplementation lib.androidx.extJunit
+    androidTestImplementation lib.espresso.core
 
     //AndroidX
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation lib.androidx.appcompat
 
     //Artear
-    implementation "com.artear.multitracker:multitracker:$multiTrackerVersion"
-    implementation "com.artear.tools:tools:$toolsVersion"
-    implementation "com.artear.ui:view:$uiViewVersion"
-    implementation "com.artear.domain:domain:$domainVersion"
-    implementation "com.artear.injector:injector-api:$injectorVersion"
-    kapt "com.artear.injector:injector-compiler:$injectorVersion"
+    implementation lib.artear.multitracker
+    implementation lib.artear.tools
+    implementation lib.artear.uiView
+    implementation lib.artear.domain
+    implementation lib.artear.injector
+    kapt lib.artear.injectorKapt
 
     //Logger
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation lib.timber.library
 
     //Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation lib.kotlin.coroutinesCore
+    implementation lib.kotlin.coroutinesAndroid
 
-    implementation 'com.github.yanex:takenoko:0.1'
+    implementation lib.square.moshi
+    implementation lib.square.okio
+    kapt lib.square.moshiKapt
 
-    implementation "com.squareup.moshi:moshi:$moshiVersion"
-    implementation "com.squareup.okio:okio:$okio"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    implementation 'com.github.yanex:takenoko:0.1' //)?
 }

@@ -24,30 +24,68 @@ import com.artear.webwrap.presentation.webnavigation.WebNavigationActionManager
 import com.artear.webwrap.util.ActivityWindowConfig
 
 /**
- * A wrapper of your webView. Manage the load of url and is a controller for url override
- * executed in the web page across a navigation action. Also has enabled javascript and check all
- * event from them using event js.
- * The wrapper is a [LifecycleObserver], and is lifecycle-aware.
+ * A wrapper of your [WebView]. Manage the load of url and is a controller for url override
+ * executed in the web page across a [WebNavigationActionManager]. Also has javascript enabled
+ * and check all event from them using [WebJsEventManager].
+ * The wrapper is a [LifecycleObserver] and is lifecycle-aware.
  *
- * @param webView The webView which will be wrapped
+ * @author David Tolchinsky
+ * @param [webView] The [WebView] which will be wrapped
  */
 //TODO check memory webview not null
 class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
 
     companion object {
+
+        /**
+         * Default value of [progressMinToHide]
+         */
         private const val PROGRESS_MIN_TO_HIDE_DEFAULT = 100
         private val matchParentLayout = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
     }
 
+    /**
+     * Value of percent progress of the url that is loading to dispatch [WebLoadListener.onLoaded].
+     *
+     * @see PROGRESS_MIN_TO_HIDE_DEFAULT
+     */
     var progressMinToHide = PROGRESS_MIN_TO_HIDE_DEFAULT
+
+    /**
+     * The main listener to control the result of the url execution.
+     */
     var loadListener: WebLoadListener? = null
+
+    /**
+     * The navigation manager associated to this web wrapper.
+     */
     var webNavigationActionManager: WebNavigationActionManager? = null
+
+    /**
+     * The javascript event manager associated to this web wrapper.
+     */
     var webJsEventManager: WebJsEventManager? = null
+
+    /**
+     * Show the current progress of the url that is loading this wrapper.
+     */
     private var currentProgress: Int = 0
+
+    /**
+     * Flag to dispatch [WebLoadListener.onLoading]. Will set false when start the [loadUrl] and
+     * true when the event was dispatched.
+     */
     private var loadingAction: Boolean = false
 
-    //To execute a full screen view
+    /**
+     *  To execute a full screen view. Some use case need the entire screen, like a video.
+     *  Can be set by [WebChromeClient.onShowCustomView].
+     */
     private var customFullScreenView: View? = null
+
+    /**
+     * Used like delegate when need to dispatch [WebChromeClient.CustomViewCallback.onCustomViewHidden]
+     */
     private var customViewCallback: WebChromeClient.CustomViewCallback? = null
     private var originalConfig: ActivityWindowConfig? = null
 
@@ -57,6 +95,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         extraConfig()
     }
 
+    /**
+     * Only for debug configuration
+     */
     private fun debugConfig() {
         webView?.let {
             if (0 != it.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
@@ -67,6 +108,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Settings configuration of your [WebView]
+     */
     @SuppressLint("SetJavaScriptEnabled")
     private fun settingsConfig() {
         webView?.apply {
@@ -76,6 +120,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Any other configuration
+     */
     @SuppressLint("ClickableViewAccessibility")
     fun extraConfig() {
         webView?.apply {
@@ -140,6 +187,10 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Call to dismiss the custom view in full screen. Maybe called from [WebChromeClient] or
+     * when need to destroy and recover the original orientation.
+     */
     private fun hideCustomFullScreenView() {
         logD { "WebWrap - WebView - hideCustomFullScreenView" }
         val activity: AppCompatActivity? = webView?.context as? AppCompatActivity
@@ -163,6 +214,10 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Load the javascript interface between your application and [WebView]. That interface
+     * is a [WebJsEventManager].
+     */
     fun loadJsInterface(webJsEventManager: WebJsEventManager) {
         check(webJsEventManager.commands.isNotEmpty()) {
             "WebWrap - Commands is empty. The WebJsEventManager must have a command as least"
@@ -172,6 +227,14 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Load a new [urlTarget] into your [WebView].
+     *
+     * Note that you should load and config your [WebWrapper] previously.
+     *
+     * @see WebJsEventManager
+     * @see WebNavigationActionManager
+     */
     fun loadUrl(urlTarget: String) {
         webView?.apply {
             currentProgress = 0
@@ -217,6 +280,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Unify the override url android webkit api in only one function that receive a [Uri].
+     */
     private fun overrideUrlLoading(view: WebView, uri: Uri): Boolean {
         webNavigationActionManager?.run {
             return processUri(view.context, uri)
@@ -224,6 +290,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         return false
     }
 
+    /**
+     * Call this method for enable the cookies in your [WebView].
+     */
     fun enabledCookieManager() {
         webView?.let {
             CookieManager.getInstance().setAcceptCookie(true)
@@ -234,6 +303,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Part of [LifecycleObserver] flow. Execute at resume the lifecycle an notify to the [WebView].
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {
         logD { "WebWrap - onResume - webView = ${webView?.id}" }
@@ -243,6 +315,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Part of [LifecycleObserver] flow. Execute at pause the lifecycle an notify to the [WebView].
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onPause() {
         logD { "WebWrap - onPause - webView = ${webView?.id}" }
@@ -252,6 +327,9 @@ class WebWrapper(internal var webView: WebView?) : LifecycleObserver {
         }
     }
 
+    /**
+     * Part of [LifecycleObserver] flow. Clean all objects. Also the cache on the [WebView].
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
         logD { "WebWrap - onDestroy - webView = ${webView?.id}" }
