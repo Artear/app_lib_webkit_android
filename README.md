@@ -1,10 +1,33 @@
 # WebWrap
 WebWrap Lib
 
+- This is a useful library for encapsulate all webview fuctionality 
+
+ 
+Documentation
+--------
+
+This library has a main component called [WebWrapper](./webwrap/src/main/java/com/artear/webwrap/WebWrapper.kt).
+The main goal is use the webview functionality across the wrapper. 
+Configure it with extra managers: [WebJsEventManager](./webwrap/src/main/java/com/artear/webwrap/presentation/webjs/WebJsEventManager.kt)
+and [WebNavigationActionManager](./webwrap/src/main/java/com/artear/webwrap/presentation/webnavigation/WebNavigationActionManager.kt)
+
+
+
+Implementation
+--------
+
+lastVersion = 0.0.11
+
+Gradle:
+```groovy
+implementation "com.artear.webwrap:webwrap::$lastVersion"
+```
+
 License
 =======
 
-    Copyright 2018 Artear S.A.
+    Copyright 2019 Artear S.A.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
